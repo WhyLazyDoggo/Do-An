@@ -48,12 +48,12 @@ public class ConnectDatabase {
             System.out.println(conn.getCatalog());
 
 
-            ResultSet rs = stmt.executeQuery("SELECT * FROM test_sign");
-            while (rs.next()) {
-                records.append("Name: ").append(rs.getString(1)).append(", Place: ").append(rs.getString(3)).append("\n");
-
-            }
-            System.out.println(records);
+//            ResultSet rs = stmt.executeQuery("SELECT * FROM test_sign");
+//            while (rs.next()) {
+//                records.append("Name: ").append(rs.getString(1)).append(", Place: ").append(rs.getString(3)).append("\n");
+//
+//            }
+//            System.out.println(records);
 
             return stmt;
         }

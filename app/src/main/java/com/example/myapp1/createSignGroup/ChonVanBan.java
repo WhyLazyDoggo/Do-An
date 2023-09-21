@@ -16,11 +16,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.myapp1.R;
-import com.example.myapp1.comfirmKy.FileAdapter;
-import com.example.myapp1.comfirmKy.FileModel;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class ChonVanBan extends AppCompatActivity {
@@ -38,15 +35,16 @@ public class ChonVanBan extends AppCompatActivity {
 
 
 
+//
+//        ImageButton pictureTest = (ImageButton) findViewById(R.id.info_btn);
+//
+//        pictureTest.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                testDialog();
+//            }
+//        });
 
-        ImageButton pictureTest = (ImageButton) findViewById(R.id.info_btn);
-
-        pictureTest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                testDialog();
-            }
-        });
         setRecycleView();
     }
 
@@ -59,7 +57,7 @@ public class ChonVanBan extends AppCompatActivity {
         );
         builder.setView(view);
 
-        ((TextView) view.findViewById(R.id.textDump)).setText("Tệp tên xyz");
+        ((TextView) view.findViewById(R.id.name_file)).setText("Tệp tên xyz");
 
         ((TextView) view.findViewById(R.id.textDumpInfo)).setText("Nội dung cơ bản:" +
                 "\n <<<Hình ảnh về tệp các thứ" +
@@ -78,9 +76,6 @@ public class ChonVanBan extends AppCompatActivity {
         view.findViewById(R.id.buttonAction).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
-
                 alertDialog.dismiss();
                 System.out.println("-------------------------------------------------------------");
                 System.out.println("Bạn đã click thành công");
@@ -151,7 +146,7 @@ public class ChonVanBan extends AppCompatActivity {
     private List<ChonVanModel> getList() {
         List<ChonVanModel> file_list = new ArrayList<>();
         for (int i =0; i<19; i++){
-            file_list.add(new ChonVanModel(""+(i+1), "Mickey", "30/11/2021"));
+            file_list.add(new ChonVanModel("Văn bản "+(i+1), "Nhân viên "+(i+1)+"|20/11/2023",R.drawable.pdf_icon));
         }
         return file_list;
     }

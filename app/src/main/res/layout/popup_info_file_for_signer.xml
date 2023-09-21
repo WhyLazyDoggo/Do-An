@@ -68,7 +68,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textMain" />
 
             <TextView
-                android:id="@+id/textDump"
+                android:id="@+id/name_file"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="dump"
@@ -119,6 +119,15 @@
                 android:layout_marginBottom="40dp"
                 />
 
+            <TextView
+                android:id="@+id/date_file"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="dump"
+                android:paddingLeft="15dp"
+                app:layout_constraintBottom_toBottomOf="@+id/timeDumpGiao"
+                app:layout_constraintStart_toEndOf="@+id/timeDumpGiao"
+                app:layout_constraintTop_toTopOf="@+id/timeDumpGiao" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

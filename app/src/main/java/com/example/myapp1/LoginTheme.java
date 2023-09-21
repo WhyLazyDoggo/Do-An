@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myapp1.DatabaseHelper.ConnectDatabase;
+import com.example.myapp1.DatabaseHelper.SelectDB;
 import com.google.gson.Gson;
 
 import com.google.android.material.button.MaterialButton;
@@ -55,18 +56,20 @@ public class LoginTheme extends AppCompatActivity {
             public void onClick(View v) {
                 System.out.println("Đã bấm nút này");
                 Toast.makeText(LoginTheme.this, "Bạn đã bấm nút này", Toast.LENGTH_SHORT).show();
-
-
-            //Lấy in4 người dùng
                 SharedPreferences.Editor editor = getSharedPreferences("preference_user",MODE_PRIVATE).edit();
+
+                Statement stmt = ConnectDatabase.makeStatement();
+
+//                System.out.println(ketqua);
+
                 editor.putString("user","userA");
+                editor.putString("ten_nhan_vien","Không chạy nổi");
                 editor.commit();
-
-
-
                 Intent intent = new Intent( LoginTheme.this, GiaoDienChinh.class);
                 startActivity(intent);
                 finish();
+            //Lấy in4 người dùng
+
             }
         });
 

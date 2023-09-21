@@ -7,14 +7,28 @@ import java.util.Date;
 public class ChonVanModel {
 
     String id;
-    String name;
     String date;
     Integer MAX_SIZE = 6;
 
-    public ChonVanModel(String id, String name, String date) {
+    int profileImagine;
+
+    public int getProfileImagine() {
+        return profileImagine;
+    }
+
+    public void setProfileImagine(int profileImagine) {
+        this.profileImagine = profileImagine;
+    }
+
+    public ChonVanModel(String id, String date) {
         this.id = id;
-        this.name = name;
         this.date = date;
+    }
+
+    public ChonVanModel(String id, String date, int profileImagine) {
+        this.id = id;
+        this.date = date;
+        this.profileImagine = profileImagine;
     }
 
     public ChonVanModel() {
@@ -26,14 +40,6 @@ public class ChonVanModel {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getDate() {

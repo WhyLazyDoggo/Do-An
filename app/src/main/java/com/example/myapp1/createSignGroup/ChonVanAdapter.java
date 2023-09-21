@@ -1,15 +1,21 @@
 package com.example.myapp1.createSignGroup;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapp1.R;
@@ -30,8 +36,8 @@ public class ChonVanAdapter extends RecyclerView.Adapter <ChonVanAdapter.ViewHol
     @NonNull
     @Override
     public ChonVanAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.table_row_item_chon_van_ban_layout,parent,false);
-//        View view = LayoutInflater.from(context).inflate(R.layout.row_chon_van_ban_item,parent,false);
+//        View view = LayoutInflater.from(context).inflate(R.layout.table_row_item_chon_van_ban_layout,parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.row_chon_van_ban_item,parent,false);
 
         return new ViewHolder(view);
     }
@@ -40,9 +46,60 @@ public class ChonVanAdapter extends RecyclerView.Adapter <ChonVanAdapter.ViewHol
     public void onBindViewHolder(@NonNull ChonVanAdapter.ViewHolder holder, int position) {
         if (file_list != null && file_list.size()>0){
             ChonVanModel model = file_list.get(position);
-            holder.id_tv.setText(model.getId());
-            holder.name_tv.setText(model.getName());
+            holder.imagine_view.setImageResource(model.getProfileImagine());
+            holder.user_name.setText(model.getId());
             holder.date_tv.setText(model.getDate());
+            holder.select_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(v.getRootView().getContext());
+                    View dialogView = LayoutInflater.from(v.getRootView().getContext()).inflate(R.layout.popup_info_file_for_signer,null);
+                    TextView textMain, name_file, textDumpInfo, date_file;
+
+                    textMain = dialogView.findViewById(R.id.textMain);
+                    name_file = dialogView.findViewById(R.id.name_file);
+                    textDumpInfo = dialogView.findViewById(R.id.textDumpInfo);
+                    date_file = dialogView.findViewById(R.id.date_file);
+
+                    textMain.setText("Chọn văn bản");
+                    name_file.setText(model.getId());
+                    textDumpInfo.setText(model.getDate());
+                    date_file.setText(model.getDate());
+                    builder.setView(dialogView);
+//                    builder.setCancelable(true);
+//                    builder.show();
+                    ((Button) dialogView.findViewById(R.id.buttonAction)).setText("Xác nhận giao");
+                    ((Button) dialogView.findViewById(R.id.buttonNo)).setText("Thoát");
+                    AlertDialog alertDialog = builder.create();
+
+                    dialogView.findViewById(R.id.buttonAction).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            alertDialog.dismiss();
+                            System.out.println("-------------------------------------------------------------");
+                            System.out.println("Bạn đã click thành công");
+                            System.out.println("-------------------------------------------------------------");
+                            Intent intent = new Intent( v.getRootView().getContext(), TaoNhomKy.class);
+                            context.startActivity(intent);
+                        }
+                    });
+
+                    dialogView.findViewById(R.id.buttonNo).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            alertDialog.dismiss();
+                        }
+                    });
+
+                    if(alertDialog.getWindow()!=null){
+                        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+
+                    }
+
+                    alertDialog.show();
+
+                }
+            });
 //            holder.id_tv.setText(model.getId());
         } else {
             return;
@@ -55,25 +112,24 @@ public class ChonVanAdapter extends RecyclerView.Adapter <ChonVanAdapter.ViewHol
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-
-        TextView id_tv, name_tv, date_tv;
-        Button info_btn;
+        ImageView imagine_view;
+        TextView user_name, date_tv;
+        Button select_btn;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
-            id_tv = itemView.findViewById(R.id.id_tv);
-            name_tv = itemView.findViewById(R.id.name_tv);
+            imagine_view = itemView.findViewById(R.id.imagine_view);
+            user_name = itemView.findViewById(R.id.user_name);
             date_tv = itemView.findViewById(R.id.date_tv);
-            info_btn = itemView.findViewById(R.id.info_btn);
+            select_btn = itemView.findViewById(R.id.select_btn);
 
             itemView.setOnClickListener((v -> {
-                Log.d("demo","onClick: item clicked" + "user"+name_tv);
+                Log.d("demo","onClick: item clicked" + "user"+user_name);
             }));
 
-            itemView.findViewById(R.id.info_btn).setOnClickListener(new View.OnClickListener() {
+            itemView.findViewById(R.id.select_btn).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d("demo","onClick: Button" + "user"+name_tv);
+                    Log.d("demo","onClick: Button" + "user"+user_name);
 
                 }
             });
