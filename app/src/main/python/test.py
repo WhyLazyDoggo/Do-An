@@ -13,6 +13,42 @@ G = (0x79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798,
 # the point at infinity is represented by the None keyword
 Point = Tuple[int, int]
 
+def checktype(array):
+    print(type(array))
+    print(array)
+    list_of_elements = array.split()
+    for u in list_of_elements:
+        print(u)
+    print(type(list_of_elements))
+
+
+
+def creatX(arrayy):
+
+    array = arrayy.split()
+
+    L = b''
+    for u in array:
+        L += str_to_bytes(u)
+    L = sha256(L)
+    X = None
+
+    for u in array:
+        # Get private key di and public key Pi
+        di = int_from_hex(u)
+        if not (1 <= di <= n - 1):
+            raise ValueError('The secret key must be an integer in the range 1..n-1.')
+        Pi = lift_x_even_y(str_to_bytes(u))
+        assert Pi is not None
+        # KeyAggCoef
+        # ai = h(L||Pi)
+        ai = int_from_bytes(sha256(L + bytes_from_point(Pi)))
+
+        # Computation of X~
+        # X~ = X1 + ... + Xn, Xi = ai * Pi
+        X = point_add(X, point_mul(Pi, ai))
+
+    return bytes_from_point(X).hex()
 
 def getHello():
     print("Gimme Herro")

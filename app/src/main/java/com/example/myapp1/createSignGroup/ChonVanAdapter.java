@@ -1,16 +1,16 @@
 package com.example.myapp1.createSignGroup;
+import static android.content.Context.MODE_PRIVATE;
 
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,7 +19,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapp1.R;
-import com.example.myapp1.comfirmKy.FileModel;
 
 import java.util.List;
 
@@ -36,7 +35,6 @@ public class ChonVanAdapter extends RecyclerView.Adapter <ChonVanAdapter.ViewHol
     @NonNull
     @Override
     public ChonVanAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-//        View view = LayoutInflater.from(context).inflate(R.layout.table_row_item_chon_van_ban_layout,parent,false);
         View view = LayoutInflater.from(context).inflate(R.layout.row_chon_van_ban_item,parent,false);
 
         return new ViewHolder(view);
@@ -47,7 +45,7 @@ public class ChonVanAdapter extends RecyclerView.Adapter <ChonVanAdapter.ViewHol
         if (file_list != null && file_list.size()>0){
             ChonVanModel model = file_list.get(position);
             holder.imagine_view.setImageResource(model.getProfileImagine());
-            holder.user_name.setText(model.getId());
+            holder.user_name.setText(model.getName());
             holder.date_tv.setText(model.getDate());
             holder.select_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -62,7 +60,7 @@ public class ChonVanAdapter extends RecyclerView.Adapter <ChonVanAdapter.ViewHol
                     date_file = dialogView.findViewById(R.id.date_file);
 
                     textMain.setText("Chọn văn bản");
-                    name_file.setText(model.getId());
+                    name_file.setText(model.getFullname());
                     textDumpInfo.setText(model.getDate());
                     date_file.setText(model.getDate());
                     builder.setView(dialogView);
@@ -79,6 +77,12 @@ public class ChonVanAdapter extends RecyclerView.Adapter <ChonVanAdapter.ViewHol
                             System.out.println("-------------------------------------------------------------");
                             System.out.println("Bạn đã click thành công");
                             System.out.println("-------------------------------------------------------------");
+
+                            //Thêm dữ liệu id vào kho
+                            SharedPreferences.Editor editor = context.getSharedPreferences("preference_user",MODE_PRIVATE).edit();
+                            editor.putString("id_van_ban",model.getId());
+                            editor.commit();
+
                             Intent intent = new Intent( v.getRootView().getContext(), TaoNhomKy.class);
                             context.startActivity(intent);
                         }

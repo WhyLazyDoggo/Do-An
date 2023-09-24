@@ -69,4 +69,23 @@ public class ConnectDatabase {
             return null;
         }
     }
+
+    public static Statement ConnectionClass () {
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        Connection connection = null;
+        String ConnectionURL = null;
+        Statement stmt = null;
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            ConnectionURL = "jdbc:mysql://db-sig.cosncuwagf24.us-east-1.rds.amazonaws.com:3306/DB_ECC?useUnicode=true&useSSL=false&characterEncoding=UTF-8";
+            connection = DriverManager.getConnection(ConnectionURL, "admin", "Shota4ever");
+            stmt = connection.createStatement();
+
+
+        } catch (Exception e) {
+            Log.e("Error ", e.getMessage());
+        }
+        return stmt;
+    }
 }

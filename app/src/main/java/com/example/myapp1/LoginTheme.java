@@ -17,9 +17,6 @@ import android.widget.Toast;
 
 import com.example.myapp1.DatabaseHelper.ConnectDatabase;
 import com.example.myapp1.DatabaseHelper.SelectDB;
-import com.google.gson.Gson;
-
-import com.google.android.material.button.MaterialButton;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,9 +24,8 @@ import java.sql.Statement;
 
 public class LoginTheme extends AppCompatActivity {
 
-
-    Gson gson = new Gson();
-
+    private Toast mToast;
+    private long backPressedTime;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +38,8 @@ public class LoginTheme extends AppCompatActivity {
         Button ButtonResent = (Button) findViewById(R.id.buttonResent);
 
         TextView textView = (TextView) findViewById(R.id.textView4);
+        TextView username = (TextView) findViewById(R.id.username);
+        TextView password = (TextView) findViewById(R.id.password);
 
         ButtonResent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,20 +53,40 @@ public class LoginTheme extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 System.out.println("Đã bấm nút này");
-                Toast.makeText(LoginTheme.this, "Bạn đã bấm nút này", Toast.LENGTH_SHORT).show();
+
                 SharedPreferences.Editor editor = getSharedPreferences("preference_user",MODE_PRIVATE).edit();
 
-                Statement stmt = ConnectDatabase.makeStatement();
+                String name = username.getText().toString();
 
-//                System.out.println(ketqua);
+                if (name.length()>1)
+                {
+                    mToast = Toast.makeText(LoginTheme.this, "Đang đăng nhập vào hệ thống", Toast.LENGTH_SHORT);
+                    mToast.show();
+                    ResultSet rs = null;
+                    rs = SelectDB.checkLogin(name,"123");
+                    //Lấy in4 người dùng
+                    try {
+                        editor.putString("user",rs.getString("id"));
+                        editor.putString("ten_nhan_vien",rs.getString("ten_nhan_vien"));
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                    editor.commit();
+                    Intent intent = new Intent( LoginTheme.this, GiaoDienChinh.class);
+                    startActivity(intent);
+                    finish();
+                }else {
 
-                editor.putString("user","userA");
-                editor.putString("ten_nhan_vien","Không chạy nổi");
-                editor.commit();
-                Intent intent = new Intent( LoginTheme.this, GiaoDienChinh.class);
-                startActivity(intent);
-                finish();
-            //Lấy in4 người dùng
+                    mToast = Toast.makeText(LoginTheme.this, "Vui lòng nhập UserName", Toast.LENGTH_SHORT);
+                    mToast.show();
+                }
+                if (backPressedTime + 2000 > System.currentTimeMillis()){
+                    mToast.cancel();
+                }
+                backPressedTime = System.currentTimeMillis();
+
+
+
 
             }
         });

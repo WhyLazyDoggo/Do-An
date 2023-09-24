@@ -17,9 +17,11 @@ import android.widget.TextView;
 import com.chaquo.python.PyObject;
 import com.chaquo.python.Python;
 import com.chaquo.python.android.AndroidPlatform;
+import com.example.myapp1.DatabaseHelper.ecSHelper;
 import com.example.myapp1.R;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class KyXacNhanVanban extends AppCompatActivity {
@@ -34,7 +36,7 @@ public class KyXacNhanVanban extends AppCompatActivity {
         setContentView(R.layout.activity_ky_xac_nhan_vanban);
 
         recycler_view = findViewById(R.id.recycler_view);
-        
+
         setRecycleView();
 
         Button button_confirm = (Button) findViewById(R.id.button_confirm);
@@ -46,26 +48,29 @@ public class KyXacNhanVanban extends AppCompatActivity {
             }
         });
 
-        ImageView picturedump2 = (ImageView) findViewById(R.id.picturedump2);
-
-        picturedump2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDeny();
-            }
-        });
-
         if (!Python.isStarted()) {
             Python.start(new AndroidPlatform(this));
 
         }
 
         Python py = Python.getInstance();
+        String input2 ="";
+        input2 += " " +"a3d70ac922738b583c472b217fed65ad03d4bcaf25d462ec5294c06ac334ab06";
+        input2 += " " +"9ae1064f3954bb4397c28bd1d861f61312fd9bf85c7931f6399d671b9324e349";
+        input2 += " " +"985bf2ef997ec6b87206aca0f67b3beeb1c19e73fc3a8e3e30ac7d2a283aba31"+" ";
 
-        PyObject pyO = py.getModule("test");
-        PyObject pycall = pyO.callAttr("getHello");
 
-        System.out.println(pycall.toString());
+        PyObject creatX = py.getModule("test").get("creatX");
+
+        PyObject result = creatX.call(input2);
+
+        System.out.println(result);
+
+        String result2 = ecSHelper.getX(this,input2);
+
+        System.out.println("Kết quả thứ 2 ------------------------- ");
+        System.out.println(result2);
+
     }
 
     private void setRecycleView() {
@@ -81,50 +86,10 @@ public class KyXacNhanVanban extends AppCompatActivity {
         file_list.add(new FileModel("1","Mickey","10000"));
         file_list.add(new FileModel("1","Mickey","10000"));
         file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
+        file_list.add(new FileModel("Mickey","10000",R.drawable.xls_icon));
+        file_list.add(new FileModel("Mickey","10000",R.drawable.pdf_icon));
+        file_list.add(new FileModel("Mickey","10000",R.drawable.txt_icon));
+        file_list.add(new FileModel("Mickey","10000",R.drawable.doc_icon));
         return file_list;
     }
 
@@ -182,7 +147,7 @@ public class KyXacNhanVanban extends AppCompatActivity {
 
         ((TextView) view.findViewById(R.id.textMain)).setText("Thông tin về tệp\nchuẩn bị ký");
 
-        ((TextView) view.findViewById(R.id.textDump)).setText("tệp x/y/z");
+        ((TextView) view.findViewById(R.id.name_file)).setText("tệp x/y/z");
 
         ((TextView) view.findViewById(R.id.textDumpInfo)).setText("<<Hình ảnh tệp" +
                 "\n Nội dung tệp" +

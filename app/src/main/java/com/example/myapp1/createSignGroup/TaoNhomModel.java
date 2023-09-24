@@ -2,6 +2,7 @@ package com.example.myapp1.createSignGroup;
 
 public class TaoNhomModel {
     int profileImage;
+    String id;
     String username;
     String decreption;
 
@@ -15,13 +16,22 @@ public class TaoNhomModel {
         isChecked = checked;
     }
 
-    public TaoNhomModel(int profileImage, String username, String decreption) {
+    public TaoNhomModel(int profileImage, String id, String username, String decreption) {
         this.profileImage = profileImage;
+        this.id = id;
         this.username = username;
         this.decreption = decreption;
     }
 
     public TaoNhomModel() {
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public int getProfileImage() {

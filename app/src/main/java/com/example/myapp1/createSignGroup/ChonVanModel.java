@@ -7,8 +7,10 @@ import java.util.Date;
 public class ChonVanModel {
 
     String id;
+    String name;
+    String fullname;
     String date;
-    Integer MAX_SIZE = 6;
+    Integer MAX_SIZE = 18;
 
     int profileImagine;
 
@@ -20,15 +22,30 @@ public class ChonVanModel {
         this.profileImagine = profileImagine;
     }
 
-    public ChonVanModel(String id, String date) {
+    public ChonVanModel(String id, String name, String date, int profileImagine) {
         this.id = id;
-        this.date = date;
-    }
-
-    public ChonVanModel(String id, String date, int profileImagine) {
-        this.id = id;
+        this.name = name;
+        this.fullname = name;
+        if (this.name.length()>MAX_SIZE)
+            this.name = name.substring(0, MAX_SIZE) + "...";
         this.date = date;
         this.profileImagine = profileImagine;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getFullname() {
+        return fullname;
+    }
+
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
     }
 
     public ChonVanModel() {

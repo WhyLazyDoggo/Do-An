@@ -7,18 +7,25 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.example.myapp1.DatabaseHelper.SelectDB;
 import com.example.myapp1.R;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.transform.Result;
 
 public class ChonVanBan extends AppCompatActivity {
 
@@ -30,23 +37,15 @@ public class ChonVanBan extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chon_van_ban);
+        SharedPreferences prefs = getSharedPreferences("preference_user", MODE_PRIVATE);
+        System.out.println(prefs.getAll());
 
         recycler_view = findViewById(R.id.recycler_view);
 
-
-
-//
-//        ImageButton pictureTest = (ImageButton) findViewById(R.id.info_btn);
-//
-//        pictureTest.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                testDialog();
-//            }
-//        });
-
         setRecycleView();
     }
+
+    //Thêm chức năng khi quay lại sẽ tự động update lại văn bản
 
     public void testDialog() {
 
@@ -145,9 +144,17 @@ public class ChonVanBan extends AppCompatActivity {
 
     private List<ChonVanModel> getList() {
         List<ChonVanModel> file_list = new ArrayList<>();
-        for (int i =0; i<19; i++){
-            file_list.add(new ChonVanModel("Văn bản "+(i+1), "Nhân viên "+(i+1)+"|20/11/2023",R.drawable.pdf_icon));
+
+        ResultSet rs = SelectDB.getVanBan(null, null);
+        try{
+            while (rs.next()){
+                file_list.add(new ChonVanModel(rs.getString("id"), rs.getString("ten_van_ban") , rs.getString("created_at"),R.drawable.pdf_icon));
+            }
+        }catch (SQLException e) {
+            System.out.println("Error");
+            Log.e(null, "Error connection!!! Tạo bảng KyTucXa chưa Pa?");
         }
+
         return file_list;
     }
 

@@ -4,7 +4,8 @@ public class FileModel {
     String id;
     String name;
     String person;
-    Integer MAX_SIZE= 6;
+    Integer MAX_SIZE= 12;
+    int profileImagine;
 
     public FileModel(String id, String name, String person) {
         this.id = id;
@@ -17,6 +18,20 @@ public class FileModel {
 
     public FileModel() {
 
+    }
+
+    public FileModel(String name, String person, int profileImagine) {
+        this.name = name;
+        this.person = person;
+        this.profileImagine = profileImagine;
+    }
+
+    public int getProfileImagine() {
+        return profileImagine;
+    }
+
+    public void setProfileImagine(int profileImagine) {
+        this.profileImagine = profileImagine;
     }
 
     public String getId() {
