@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -28,7 +29,8 @@ public class checkNotSignatureAdapter extends RecyclerView.Adapter <checkNotSign
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.table_row_item_layout,parent,false);
+//        View view = LayoutInflater.from(context).inflate(R.layout.table_row_item_layout,parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.row_show_info_van_ban,parent,false);
         return new ViewHolder(view);
     }
 
@@ -36,10 +38,10 @@ public class checkNotSignatureAdapter extends RecyclerView.Adapter <checkNotSign
     public void onBindViewHolder(@NonNull checkNotSignatureAdapter.ViewHolder holder, int position) {
         if (sign_list != null && sign_list.size()>0){
             checkNotSignatureModel model = sign_list.get(position);
-            holder.id_tv.setText(model.getId());
-            holder.name_tv.setText(model.getName());
-            holder.person_tv.setText(model.getPerson());
-            holder.count_tv.setText(model.getCount());
+            holder.imagine_view.setImageResource(model.getProfileImagine());
+            holder.user_name.setText(model.getName());
+            holder.decreption_tv.setText(model.getPerson());
+            holder.process.setText(model.getCount());
         } else {
             return;
         }
@@ -51,16 +53,18 @@ public class checkNotSignatureAdapter extends RecyclerView.Adapter <checkNotSign
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        TextView id_tv, name_tv, person_tv, count_tv;
+        TextView user_name, decreption_tv, process;
+
+        ImageView imagine_view;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            id_tv = itemView.findViewById(R.id.id_tv);
-            name_tv = itemView.findViewById(R.id.name_tv);
-            person_tv = itemView.findViewById(R.id.person_tv);
-            count_tv = itemView.findViewById(R.id.count_tv);
+            imagine_view = itemView.findViewById(R.id.imagine_view);
+            user_name = itemView.findViewById(R.id.user_name);
+            decreption_tv = itemView.findViewById(R.id.decreption_tv);
+            process = itemView.findViewById(R.id.process);
 
             itemView.setOnClickListener((v -> {
-                Log.d("demo","onClick: item clicked" + "user"+name_tv);
+                Log.d("demo","onClick: item clicked" + "user"+user_name);
             }));
 
         }

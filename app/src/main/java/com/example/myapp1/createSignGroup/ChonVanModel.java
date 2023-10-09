@@ -9,6 +9,7 @@ public class ChonVanModel {
     String id;
     String name;
     String fullname;
+    String datafile;
     String date;
     Integer MAX_SIZE = 18;
 
@@ -22,14 +23,23 @@ public class ChonVanModel {
         this.profileImagine = profileImagine;
     }
 
-    public ChonVanModel(String id, String name, String date, int profileImagine) {
+    public ChonVanModel(String id, String name,String datafile, String date, int profileImagine) {
         this.id = id;
         this.name = name;
+        this.datafile = datafile;
         this.fullname = name;
         if (this.name.length()>MAX_SIZE)
             this.name = name.substring(0, MAX_SIZE) + "...";
         this.date = date;
         this.profileImagine = profileImagine;
+    }
+
+    public String getDatafile() {
+        return datafile;
+    }
+
+    public void setDatafile(String datafile) {
+        this.datafile = datafile;
     }
 
     public String getName() {

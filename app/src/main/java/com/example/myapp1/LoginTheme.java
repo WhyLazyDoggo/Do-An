@@ -1,5 +1,6 @@
 package com.example.myapp1;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -17,6 +18,8 @@ import android.widget.Toast;
 
 import com.example.myapp1.DatabaseHelper.ConnectDatabase;
 import com.example.myapp1.DatabaseHelper.SelectDB;
+
+import org.jetbrains.annotations.Contract;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -66,8 +69,12 @@ public class LoginTheme extends AppCompatActivity {
                     rs = SelectDB.checkLogin(name,"123");
                     //Lấy in4 người dùng
                     try {
+                        editor.clear();
+                        editor.commit();
                         editor.putString("user",rs.getString("id"));
+                        editor.putString("pubkey",rs.getString("khoa_cong_khai"));
                         editor.putString("ten_nhan_vien",rs.getString("ten_nhan_vien"));
+                        editor.putString("privatekey",getPrivateKey(rs.getString("id")));
                     } catch (SQLException e) {
                         throw new RuntimeException(e);
                     }
@@ -127,6 +134,21 @@ public class LoginTheme extends AppCompatActivity {
 
         alertDialog.show();
 
+    }
+
+
+    private String getPrivateKey(String IdName){
+        String var="";
+        ResultSet rs = null;
+
+        rs = SelectDB.getPrivateKey(IdName);
+        try {
+            var = rs.getString("private_key");
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return var;
     }
 
     public void checkUser(){

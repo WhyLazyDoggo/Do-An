@@ -61,7 +61,7 @@ public class ChonVanAdapter extends RecyclerView.Adapter <ChonVanAdapter.ViewHol
 
                     textMain.setText("Chọn văn bản");
                     name_file.setText(model.getFullname());
-                    textDumpInfo.setText(model.getDate());
+                    textDumpInfo.setText(model.getDatafile());
                     date_file.setText(model.getDate());
                     builder.setView(dialogView);
 //                    builder.setCancelable(true);
@@ -80,7 +80,9 @@ public class ChonVanAdapter extends RecyclerView.Adapter <ChonVanAdapter.ViewHol
 
                             //Thêm dữ liệu id vào kho
                             SharedPreferences.Editor editor = context.getSharedPreferences("preference_user",MODE_PRIVATE).edit();
+                            System.out.println("Giá trị hiện tại:"+model.getDatafile());
                             editor.putString("id_van_ban",model.getId());
+                            editor.putString("noi_dung_van_ban",model.getDatafile());
                             editor.commit();
 
                             Intent intent = new Intent( v.getRootView().getContext(), TaoNhomKy.class);

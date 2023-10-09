@@ -11,7 +11,8 @@
         android:id="@+id/button_confirm"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginBottom="32dp"
         android:background="@drawable/button_error_bg"
         android:paddingLeft="20dp"
@@ -20,64 +21,77 @@
         android:textColor="#FFF"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="40dp"
         app:layout_constraintEnd_toStartOf="@id/button_download"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scrollView3" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/allinbutton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layout_constraintBottom_toTopOf="@+id/scrollView3"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
 
         >
+
         <Button
             android:id="@+id/button_notdone"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Chưa hoàn thành"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/button_done"
-            />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/button_done"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Đã hoàn thành"
             android:background="@drawable/button_error_bg"
+            android:text="Đã hoàn thành"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/button_notdone"
-            />
+            app:layout_constraintStart_toEndOf="@+id/button_notdone" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <View
+        android:id="@+id/view2"
+        android:layout_width="match_parent"
+        android:layout_height="0.1dp"
+        android:background="#46B5B1B1"
+        app:layout_constraintTop_toBottomOf="@id/allinbutton"/>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="25dp"
+        app:layout_constraintTop_toBottomOf="@+id/view2"
+        app:layout_constraintBottom_toTopOf="@+id/button_confirm"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+    </androidx.recyclerview.widget.RecyclerView>
 
     <Button
         android:id="@+id/button_download"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="40dp"
         android:layout_marginBottom="32dp"
         android:background="@drawable/button_error_bg"
-        android:layout_marginStart="10dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:text="NULL"
         android:textColor="#FFF"
         android:textStyle="bold"
-        app:layout_goneMarginStart="10dp"
-        android:layout_marginEnd="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/button_confirm"
-        app:layout_constraintTop_toBottomOf="@+id/scrollView3" />
+        app:layout_goneMarginStart="10dp" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -115,222 +129,6 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             app:srcCompat="@drawable/icon_filter" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/scrollView3"
-        android:layout_width="394dp"
-        android:layout_height="600dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/allinbutton">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TableLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-
-                >
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/table_bg"
-                    android:gravity="center">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/textSTT"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:padding="25px"
-                            android:text="STT"
-                            android:textAlignment="center"
-                            android:textColor="@color/white"
-                            android:textSize="16dp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
-
-
-                        <TextView
-                            android:id="@+id/textName"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:padding="25px"
-                            android:text="Tên văn bản"
-                            android:textAlignment="center"
-                            android:textColor="@color/white"
-                            android:textSize="16dp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
-
-
-                        <TextView
-                            android:id="@+id/textDate"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:padding="25px"
-                            android:text="Người giao"
-                            android:textAlignment="center"
-                            android:textColor="@color/white"
-                            android:textSize="16dp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.01"
-                        android:orientation="horizontal">
-
-
-                        <TextView
-                            android:id="@+id/textInfo"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="Kiểm tra"
-                            android:padding="25px"
-                            android:textAlignment="center"
-                            android:textColor="@color/white"
-                            android:textSize="16dp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1">
-
-                        <TextView
-                            android:id="@+id/textSTTdump"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:padding="5px"
-                            android:text="1"
-                            android:textAlignment="center"
-                            android:textColor="#000"
-                            android:textSize="18dp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1">
-
-                        <TextView
-                            android:id="@+id/textNamedump"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:padding="5px"
-                            android:text="Tên văn bản"
-                            android:textAlignment="center"
-                            android:textColor="#000"
-                            android:textSize="18dp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1">
-
-                        <TextView
-                            android:id="@+id/textDatedump"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:padding="5px"
-                            android:text="Người giao"
-                            android:textAlignment="center"
-                            android:textColor="#000"
-                            android:textSize="18dp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.001">
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:padding="5px">
-
-                            <ImageView
-                                android:id="@+id/picturedump1"
-                                android:layout_width="25dp"
-                                android:layout_height="25dp"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toEndOf="@id/picturedump2"
-                                app:srcCompat="@drawable/icon_download" />
-
-                            <ImageView
-                                android:id="@+id/picturedump2"
-                                android:layout_width="25dp"
-                                android:layout_height="25dp"
-                                app:layout_constraintEnd_toStartOf="@+id/picturedump1"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:srcCompat="@drawable/icon_check_signature" />
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    </LinearLayout>
-
-                </TableRow>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycler_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-
-            </TableLayout>
-        </LinearLayout>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

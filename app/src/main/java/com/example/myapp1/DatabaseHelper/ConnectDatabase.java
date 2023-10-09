@@ -59,6 +59,7 @@ public class ConnectDatabase {
         }
         catch (SQLException e) {
             System.out.println("Error");
+            System.out.println(e);
             Log.e(null, "Error connection!!! Tạo bảng KyTucXa chưa Pa?");
             return null;
         }

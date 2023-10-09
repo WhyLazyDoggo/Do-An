@@ -6,8 +6,10 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -17,15 +19,18 @@ import android.widget.TextView;
 import com.chaquo.python.PyObject;
 import com.chaquo.python.Python;
 import com.chaquo.python.android.AndroidPlatform;
+import com.example.myapp1.DatabaseHelper.SelectDB;
 import com.example.myapp1.DatabaseHelper.ecSHelper;
 import com.example.myapp1.R;
+import com.example.myapp1.createSignGroup.TaoNhomModel;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class KyXacNhanVanban extends AppCompatActivity {
-
 
     RecyclerView recycler_view;
     FileAdapter adapter;
@@ -48,28 +53,6 @@ public class KyXacNhanVanban extends AppCompatActivity {
             }
         });
 
-        if (!Python.isStarted()) {
-            Python.start(new AndroidPlatform(this));
-
-        }
-
-        Python py = Python.getInstance();
-        String input2 ="";
-        input2 += " " +"a3d70ac922738b583c472b217fed65ad03d4bcaf25d462ec5294c06ac334ab06";
-        input2 += " " +"9ae1064f3954bb4397c28bd1d861f61312fd9bf85c7931f6399d671b9324e349";
-        input2 += " " +"985bf2ef997ec6b87206aca0f67b3beeb1c19e73fc3a8e3e30ac7d2a283aba31"+" ";
-
-
-        PyObject creatX = py.getModule("test").get("creatX");
-
-        PyObject result = creatX.call(input2);
-
-        System.out.println(result);
-
-        String result2 = ecSHelper.getX(this,input2);
-
-        System.out.println("Kết quả thứ 2 ------------------------- ");
-        System.out.println(result2);
 
     }
 
@@ -82,14 +65,42 @@ public class KyXacNhanVanban extends AppCompatActivity {
 
     private List<FileModel> getList(){
         List<FileModel> file_list = new ArrayList<>();
-        file_list.add(new FileModel("1","MickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickeyMickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("1","Mickey","10000"));
-        file_list.add(new FileModel("Mickey","10000",R.drawable.xls_icon));
-        file_list.add(new FileModel("Mickey","10000",R.drawable.pdf_icon));
-        file_list.add(new FileModel("Mickey","10000",R.drawable.txt_icon));
-        file_list.add(new FileModel("Mickey","10000",R.drawable.doc_icon));
+
+        SharedPreferences prefs = getSharedPreferences("preference_user", MODE_PRIVATE);
+        ResultSet rs = SelectDB.getVanBanKy(prefs.getString("user",""));
+//      Cho thêm thông tin về Nội dung cơ bản của các tệp, revert Tên tệp dài theo file ChonVanBan
+        try {
+            while (rs.next()) {
+                String type_file = rs.getString("ten_van_ban");
+                int picture = R.drawable.xls_icon;
+                int lastDotIndex = type_file.lastIndexOf(".");
+                if (lastDotIndex != -1) {
+
+                    switch (type_file.substring(lastDotIndex)) {
+                        case ".txt":
+                            picture = R.drawable.txt_icon;
+                            break;
+                        case ".pdf":
+                            picture = R.drawable.pdf_icon;
+                            break;
+                        case ".doc":
+                            picture = R.drawable.doc_icon;
+                            break;
+                        default:
+                            picture = R.drawable.xls_icon;
+                            break;
+                    }
+
+                }
+
+            file_list.add(new FileModel(rs.getString("id"),rs.getString("id_cuavanban"),rs.getString("id_nhomky"),rs.getString("ten_van_ban"),rs.getString("noidungtomtat"),rs.getString("created_at"),picture));
+            }
+
+        }catch (SQLException e) {
+            System.out.println("Error");
+            Log.e(null, "Error connection!!! Tạo bảng KyTucXa chưa Pa?");
+        }
+
         return file_list;
     }
 

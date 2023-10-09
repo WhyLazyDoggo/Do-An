@@ -13,6 +13,59 @@ G = (0x79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798,
 # the point at infinity is represented by the None keyword
 Point = Tuple[int, int]
 
+def createSignature(array,msg,X,R):
+    sSum = 0
+    string_list = array.split()
+    phantu = [int(x.strip()) for x in R.strip('()').split(',')]  # bước 3
+    Rs = tuple(phantu)  # bước 4
+    for u in string_list:
+        u = int(u)
+        sSum += u % n
+    sSum = sSum % n
+    print("Giá trị sSum là:",sSum)
+    signature_byte = bytes_from_point(Rs) + bytes_from_int(sSum)
+    print(signature_byte.hex())
+    if not schnorr_verify(str_to_bytes(msg), bytes_from_point(lift_x_even_y(str_to_bytes(X))), signature_byte):
+        raise RuntimeError('The created signature does not pass verification.')
+    return signature_byte.hex()
+
+def createSi(di,c,ki,L):
+
+    di = int_from_hex(str_to_bytes(di).hex())
+    Pi = pubkey_point_gen_from_int(di)
+    ai = int_from_bytes(sha256(str_to_bytes(L) + bytes_from_point(Pi)))
+    si = (di * int(c) * ai+ int(ki)) % n
+    return si
+
+def hashMsg_type_2(M):
+    return sha256(M.encode()).hex()
+
+def createC(Rsumm,X,msg):
+    phantu = [int(x.strip()) for x in Rsumm.strip('()').split(',')]  # bước 3
+    Rsum = tuple(phantu)  # bước 4
+
+    print("Tham số msg trong này là: ",msg)
+    print(type(msg))
+    print(tagged_hash("BIP0340/challenge", (bytes_from_point(Rsum) + bytes_from_point(lift_x_even_y(str_to_bytes(X))) + str_to_bytes(msg))))
+
+    c = int_from_bytes(tagged_hash("BIP0340/challenge", (bytes_from_point(Rsum) + bytes_from_point(lift_x_even_y(str_to_bytes(X))) + str_to_bytes(msg)))) % n
+    return c
+
+
+def createRSum(arrayy):
+    array = list(map(int, arrayy.split()))
+    Rsum = None
+    for ki in array:
+        Ri = point_mul(G, ki)
+        assert Ri is not None
+
+        # Rsum = R1 + ... + Rn
+        Rsum = point_add(Rsum, Ri)
+    return Rsum
+
+def hashMsg(M):
+    return sha256(M.encode())
+
 def checktype(array):
     print(type(array))
     print(array)
@@ -22,6 +75,15 @@ def checktype(array):
     print(type(list_of_elements))
 
 
+def createKi(pub_key, msg):
+    Pi = lift_x_even_y(str_to_bytes(pub_key))
+    ki= 0
+    while(ki == 0):
+        t = xor_bytes(bytes_from_int(n), tagged_hash("BIP0340/aux", get_aux_rand()))
+        ki = int_from_bytes(tagged_hash("BIP0340/nonce", t + bytes_from_point(Pi) + msg.encode())) % n
+        Ri = point_mul(G, ki)
+        assert Ri is not None
+    return ki
 
 def creatX(arrayy):
 
@@ -49,6 +111,16 @@ def creatX(arrayy):
         X = point_add(X, point_mul(Pi, ai))
 
     return bytes_from_point(X).hex()
+
+def creatL(arrayy):
+    array = arrayy.split()
+
+    L = b''
+    for u in array:
+        L += str_to_bytes(u)
+    L = sha256(L)
+
+    return L.hex()
 
 def getHello():
     print("Gimme Herro")

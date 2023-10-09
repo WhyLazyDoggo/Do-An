@@ -25,7 +25,7 @@ public class FragmentHome extends Fragment {
         TextView textNameId;
         textNameId = view.findViewById(R.id.textNameId);
         SharedPreferences prefs = getContext().getSharedPreferences("preference_user", MODE_PRIVATE);
-
+        System.out.println(prefs.getAll());
         textNameId.setText(prefs.getString("ten_nhan_vien",""));
 
 

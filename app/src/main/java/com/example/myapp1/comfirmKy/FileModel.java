@@ -2,28 +2,55 @@ package com.example.myapp1.comfirmKy;
 
 public class FileModel {
     String id;
+    String id_cuavanban;
+    String id_nhomKy;
     String name;
+    String fullname;
+    String date;
     String person;
-    Integer MAX_SIZE= 12;
+    String datafile;
+    Integer MAX_SIZE= 16;
     int profileImagine;
 
-    public FileModel(String id, String name, String person) {
+    public FileModel(String id, String id_cuavanban,String id_nhomKy, String name,String datafile, String date, int profileImagine) {
         this.id = id;
+        this.id_cuavanban = id_cuavanban;
+        this.id_nhomKy = id_nhomKy;
         this.name = name;
-        this.person = person;
-        if (this.name.length() > MAX_SIZE) {
+        this.datafile = datafile;
+        this.fullname = name;
+        if (this.name.length()>MAX_SIZE)
             this.name = name.substring(0, MAX_SIZE) + "...";
-        }
+        this.date = date;
+        this.profileImagine = profileImagine;
     }
 
     public FileModel() {
 
     }
 
-    public FileModel(String name, String person, int profileImagine) {
-        this.name = name;
-        this.person = person;
-        this.profileImagine = profileImagine;
+    public String getId_nhomKy() {
+        return id_nhomKy;
+    }
+
+    public void setId_nhomKy(String id_nhomKy) {
+        this.id_nhomKy = id_nhomKy;
+    }
+
+    public String getId_cuavanban() {
+        return id_cuavanban;
+    }
+
+    public void setId_cuavanban(String id_cuavanban) {
+        this.id_cuavanban = id_cuavanban;
+    }
+
+    public String getDatafile() {
+        return datafile;
+    }
+
+    public void setDatafile(String datafile) {
+        this.datafile = datafile;
     }
 
     public int getProfileImagine() {
@@ -32,6 +59,22 @@ public class FileModel {
 
     public void setProfileImagine(int profileImagine) {
         this.profileImagine = profileImagine;
+    }
+
+    public String getFullname() {
+        return fullname;
+    }
+
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getId() {

@@ -148,7 +148,35 @@ public class ChonVanBan extends AppCompatActivity {
         ResultSet rs = SelectDB.getVanBan(null, null);
         try{
             while (rs.next()){
-                file_list.add(new ChonVanModel(rs.getString("id"), rs.getString("ten_van_ban") , rs.getString("created_at"),R.drawable.pdf_icon));
+                String type_file = rs.getString("ten_van_ban");
+                int picture = R.drawable.xls_icon;
+                int lastDotIndex = type_file.lastIndexOf(".");
+                if (lastDotIndex != -1) {
+
+                    switch (type_file.substring(lastDotIndex)) {
+                        case ".txt":
+                            picture = R.drawable.txt_icon;
+                            break;
+                        case ".pdf":
+                            picture = R.drawable.pdf_icon;
+                            break;
+                        case ".doc":
+                            picture = R.drawable.doc_icon;
+                            break;
+                        default:
+                            picture = R.drawable.xls_icon;
+                            break;
+                    }
+
+                }
+
+
+
+
+
+
+
+                file_list.add(new ChonVanModel(rs.getString("id"), rs.getString("ten_van_ban") ,rs.getString("noidungtomtat") , rs.getString("created_at"),picture));
             }
         }catch (SQLException e) {
             System.out.println("Error");
