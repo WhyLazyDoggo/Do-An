@@ -160,7 +160,7 @@
                     android:background="#F44336">
 
                     <ImageView
-                        android:id="@+id/imageView4"
+                        android:id="@+id/Null1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
@@ -201,7 +201,7 @@
                     android:background="#F44336">
 
                     <ImageView
-                        android:id="@+id/imageView4"
+                        android:id="@+id/Null2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
@@ -242,7 +242,7 @@
                     android:background="#F44336">
 
                     <ImageView
-                        android:id="@+id/imageView4"
+                        android:id="@+id/Null3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
@@ -282,7 +282,7 @@
                     android:background="#F44336">
 
                     <ImageView
-                        android:id="@+id/imageView4"
+                        android:id="@+id/Null4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
@@ -330,7 +330,7 @@
                     android:background="#F44336">
 
                     <ImageView
-                        android:id="@+id/imageView4"
+                        android:id="@+id/Null5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
@@ -371,7 +371,7 @@
                     android:background="#F44336">
 
                     <ImageView
-                        android:id="@+id/imageView4"
+                        android:id="@+id/Null6"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
@@ -412,7 +412,7 @@
                     android:background="#F44336">
 
                     <ImageView
-                        android:id="@+id/imageView4"
+                        android:id="@+id/Null7"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
@@ -452,7 +452,7 @@
                     android:background="#F44336">
 
                     <ImageView
-                        android:id="@+id/imageView4"
+                        android:id="@+id/Null8"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"

@@ -1,16 +1,24 @@
 package com.example.myapp1.fragmentcontent;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.myapp1.DatabaseHelper.SelectDB;
 import com.example.myapp1.DatabaseHelper.ecSHelper;
@@ -21,10 +29,11 @@ import com.example.myapp1.comfirmKy.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class FragmentTest extends Fragment {
 
-
+//https://www.youtube.com/watch?v=xxW5xxkNtrM
     private Button btnSuccess, btnFail,btnNull;
     private EditText edtNext, edtFreeText;
     MainActivity mainActivity;
@@ -118,7 +127,48 @@ public class FragmentTest extends Fragment {
             }
         });
 
+
+        Button btnNull = (Button) mView.findViewById(R.id.btnNull);
+
+        btnNull.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(ContextCompat.checkSelfPermission(mView.getContext(), Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED){
+                    sendOTP();
+                }
+                else{
+                    ActivityCompat.requestPermissions((Activity) mView.getContext(),new String[]{Manifest.permission.SEND_SMS},100);
+                }
+
+
+
+            }
+        });
+
         return mView;
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode == 100){
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                sendOTP();
+            }else {
+                Toast.makeText(mView.getContext(),"Lỗi cmnr",Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void sendOTP() {
+
+        SmsManager smsManager = SmsManager.getDefault();
+        ArrayList<String> parts = smsManager.divideMessage("Chúc mừng bạn đã bị hack");
+        String phoneNumber = "0823176357";
+        smsManager.sendMultipartTextMessage(phoneNumber,null,parts,null,null);
+        System.out.println("Đã bấm gửi tin");
+
+
     }
 
 

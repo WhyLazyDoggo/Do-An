@@ -151,7 +151,7 @@
                     tools:ignore="MissingConstraints">
 
                     <ImageView
-                        android:id="@+id/ivTTSV"
+                        android:id="@+id/ivNull1"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:src="@drawable/search_sign_icon" />
@@ -180,13 +180,13 @@
                     tools:ignore="MissingConstraints">
 
                     <ImageView
-                        android:id="@+id/ivTTSV"
+                        android:id="@+id/ivNull2"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:src="@drawable/search_sign_icon" />
 
                     <TextView
-                        android:id="@+id/textView6"
+                        android:id="@+id/textView16"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"

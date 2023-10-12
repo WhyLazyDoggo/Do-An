@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.myapp1.DatabaseHelper.ConnectDatabase;
 import com.example.myapp1.DatabaseHelper.SelectDB;
+import com.example.myapp1.ManagerTask.CreateingAccount;
 
 import org.jetbrains.annotations.Contract;
 
@@ -67,6 +68,7 @@ public class LoginTheme extends AppCompatActivity {
                     mToast.show();
                     ResultSet rs = null;
                     rs = SelectDB.checkLogin(name,"123");
+                    String role ="";
                     //Lấy in4 người dùng
                     try {
                         editor.clear();
@@ -75,13 +77,23 @@ public class LoginTheme extends AppCompatActivity {
                         editor.putString("pubkey",rs.getString("khoa_cong_khai"));
                         editor.putString("ten_nhan_vien",rs.getString("ten_nhan_vien"));
                         editor.putString("privatekey",getPrivateKey(rs.getString("id")));
+                        editor.putString("role",rs.getString("role"));
+                        role = rs.getString("role");
                     } catch (SQLException e) {
                         throw new RuntimeException(e);
                     }
                     editor.commit();
-                    Intent intent = new Intent( LoginTheme.this, GiaoDienChinh.class);
-                    startActivity(intent);
-                    finish();
+                    System.out.println(role);
+                    if (role.equals("HR")){
+                        Intent intent = new Intent( LoginTheme.this, CreateingAccount.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                    else {
+                        Intent intent = new Intent(LoginTheme.this, GiaoDienChinh.class);
+                        startActivity(intent);
+                        finish();
+                    }
                 }else {
 
                     mToast = Toast.makeText(LoginTheme.this, "Vui lòng nhập UserName", Toast.LENGTH_SHORT);
