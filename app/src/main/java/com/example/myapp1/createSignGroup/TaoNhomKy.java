@@ -63,7 +63,7 @@ public class TaoNhomKy extends AppCompatActivity {
         String privkeyMain = prefs.getString("privatekey","");
 
         String id_vanBan = prefs.getString("id_van_ban","");
-        String id_main = prefs.getString("user","");
+        String id_main = prefs.getString("id_user","");
 
 
 
@@ -88,7 +88,7 @@ public class TaoNhomKy extends AppCompatActivity {
 
                     //Bước 2: Thêm UserMain vào trước / Coi như người này được xếp thứ tự đầu tiên
                     //Làm xong nhớ bỏ comment để thử nghiệm, thử nghiệm 1 lần duy nhất :(
-                    InsertDB.insertMemberToNhomky(prefs.getString("user",""),id_vanBan,id_nhom_ky,KiMain);
+                    InsertDB.insertMemberToNhomky(prefs.getString("id_user",""),id_vanBan,id_nhom_ky,KiMain);
 
 
                     StringBuilder stringBuilder = new StringBuilder();
@@ -104,6 +104,7 @@ public class TaoNhomKy extends AppCompatActivity {
                         rs = SelectDB.getPubKey(id_user);
                         try {
                             rs.next();
+                            System.out.println("\n\n------------------Tính cá nhân-------------------------------");
                             System.out.println("Khóa công khai cá nhân: "+ rs.getString("khoa_cong_khai"));
                             tmpXGroup +=" "+rs.getString("khoa_cong_khai");
 
@@ -132,10 +133,14 @@ public class TaoNhomKy extends AppCompatActivity {
                         stringBuilder.append("\n");
 
                     }
-                    System.out.println(tmpXGroup);
+                    System.out.println("\n\nGía trị ngoài");
+                    System.out.println("Giá trị tmp group:"+tmpXGroup);
 
                     String Lgroup = ecSHelper.getL(TaoNhomKy.this,tmpXGroup);
                     String Xgroup = ecSHelper.getX(TaoNhomKy.this, tmpXGroup);
+
+                    String Xgroup_sign = ecSHelper.getXcheck(TaoNhomKy.this,tmpXGroup);
+
 
                     //Tính toán giá trị Rsum ở đây thông qua ki ở phía trên
                     String Rsum = ecSHelper.getRsum(TaoNhomKy.this,ki_group);
@@ -159,8 +164,8 @@ public class TaoNhomKy extends AppCompatActivity {
                     System.out.println("Ki person = "+KiMain);
                     System.out.println("Lgroup = "+ Lgroup);
 
-                    String Si = ecSHelper.getSi(TaoNhomKy.this,privkeyMain,c,KiMain,Lgroup);
-                    UpdateDB.kyVanBan(prefs.getString("user",""),id_nhom_ky,Si,"9999999999999999999999999999999");
+                    String Si = ecSHelper.getSi(TaoNhomKy.this,privkeyMain,c,KiMain,Lgroup,Xgroup_sign,Rsum);
+                    UpdateDB.kyVanBan(prefs.getString("id_user",""),id_nhom_ky,Si,"9999999999999999999999999999999");
                     UpdateDB.updateNhomKy(Lgroup,Xgroup,Rsum,c,ecSHelper.getHashMsg_type2(TaoNhomKy.this,prefs.getString("noi_dung_van_ban","")),tmpHashIdVanban);
 
                     System.out.println(Xgroup);
@@ -194,7 +199,7 @@ public class TaoNhomKy extends AppCompatActivity {
 
     private void addData() {
         SharedPreferences prefs = getSharedPreferences("preference_user", MODE_PRIVATE);
-        ResultSet rs = SelectDB.getNhanVien(prefs.getString("user",""));
+        ResultSet rs = SelectDB.getNhanVien(prefs.getString("id_user",""));
         try {
             while (rs.next()) {
                 list.add(new TaoNhomModel(R.drawable.home_icon,rs.getString("id"),rs.getString("ten_nhan_vien"),rs.getString("role")));

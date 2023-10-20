@@ -14,6 +14,7 @@ import com.etebarian.meowbottomnavigation.MeowBottomNavigation;
 import com.example.myapp1.comfirmKy.KyXacNhanVanban;
 import com.example.myapp1.fragmentcontent.FragmentCreateGroup;
 import com.example.myapp1.fragmentcontent.FragmentHome;
+import com.example.myapp1.fragmentcontent.FragmentInfoAll;
 import com.example.myapp1.fragmentcontent.FragmentSign;
 import com.example.myapp1.fragmentcontent.FragmentTest;
 
@@ -24,6 +25,8 @@ public class GiaoDienChinh extends AppCompatActivity {
 
     private long backPressedTime;
     private Toast mToast;
+
+    private Fragment fragInfo = new FragmentInfoAll();
 
 
     private MeowBottomNavigation bottomNavigation;
@@ -40,8 +43,7 @@ public class GiaoDienChinh extends AppCompatActivity {
 
         bottomNavigation.add(new MeowBottomNavigation.Model(1, R.drawable.home_icon));
         bottomNavigation.add(new MeowBottomNavigation.Model(2,R.drawable.sign_icon));
-        bottomNavigation.add(new MeowBottomNavigation.Model(3,R.drawable.search_sign_icon));
-        bottomNavigation.add(new MeowBottomNavigation.Model(4,R.drawable.finger));
+        bottomNavigation.add(new MeowBottomNavigation.Model(3,R.drawable.finger));
 
 
         bottomNavigation.setOnClickMenuListener(new Function1<MeowBottomNavigation.Model, Unit>() {
@@ -60,12 +62,7 @@ public class GiaoDienChinh extends AppCompatActivity {
                         break;
 
                     case 3:
-                        Intent intent = new Intent(GiaoDienChinh.this, checkNotDoneSignature.class);
-                        startActivity(intent);
-                        break;
-
-                    case 4:
-                        replaceFragment(new FragmentTest());
+                        replaceFragment(fragInfo);
                         break;
 
                 }
@@ -118,23 +115,7 @@ public class GiaoDienChinh extends AppCompatActivity {
                 switch (model.getId()){
 
                     case 3:
-                        replaceFragment(new FragmentCreateGroup());
-                        break;
-
-                }
-                return null;
-            }
-        });
-
-        bottomNavigation.setOnShowListener(new Function1<MeowBottomNavigation.Model, Unit>() {
-            @Override
-            public Unit invoke(MeowBottomNavigation.Model model) {
-                // YOUR CODES
-
-
-                switch (model.getId()){
-
-                    case 4:
+                        replaceFragment(fragInfo);
                         break;
 
                 }
@@ -153,12 +134,13 @@ public class GiaoDienChinh extends AppCompatActivity {
 
     }
 
-
     @Override
     public void onBackPressed() {
 
         if (backPressedTime + 2000 > System.currentTimeMillis()){
             mToast.cancel();
+
+            finish();
             super.onBackPressed();
             return;
         }else{

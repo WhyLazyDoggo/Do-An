@@ -157,12 +157,16 @@
                         android:src="@drawable/search_sign_icon" />
 
                     <TextView
-                        android:id="@+id/textView6"
+                        android:id="@+id/tvCheckSigner"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_weight="1"
-                        android:text="NULL"
+                        android:paddingLeft="5dp"
+                        android:text="Kiểm tra chữ ký"
+                        android:textColor="#000"
+                        android:textSize="16dp"
+                        android:textStyle="bold"
                         tools:layout_weight="1" />
 
                 </LinearLayout>
@@ -186,12 +190,16 @@
                         android:src="@drawable/search_sign_icon" />
 
                     <TextView
-                        android:id="@+id/textView16"
+                        android:id="@+id/tvNullInfo"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_weight="1"
-                        android:text="NULL"
+                        android:paddingLeft="5dp"
+                        android:text="Null TextView"
+                        android:textColor="#000"
+                        android:textSize="16dp"
+                        android:textStyle="bold"
                         tools:layout_weight="1" />
 
                 </LinearLayout>

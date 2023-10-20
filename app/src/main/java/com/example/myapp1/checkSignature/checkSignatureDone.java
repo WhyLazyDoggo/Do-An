@@ -96,7 +96,7 @@ public class checkSignatureDone extends AppCompatActivity {
 
     private void getInfor(){
         SharedPreferences prefs = getSharedPreferences("preference_user", MODE_PRIVATE);
-        String name = prefs.getString("user","");
+        String name = prefs.getString("id_user","");
         System.out.println(name);
 
     }

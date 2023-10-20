@@ -7,8 +7,50 @@ import androidx.annotation.NonNull;
 import com.chaquo.python.PyObject;
 import com.chaquo.python.Python;
 import com.chaquo.python.android.AndroidPlatform;
-
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 public class ecSHelper {
+
+
+
+
+
+    public static String sha256(String input) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(input.getBytes(StandardCharsets.UTF_8));
+            StringBuilder hexString = new StringBuilder();
+
+            for (byte b : hash) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1)
+                    hexString.append('0');
+                hexString.append(hex);
+            }
+
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+
+
+
+    public static String getResetPass(Context context,String input){
+        if (!Python.isStarted()) {
+            Python.start(new AndroidPlatform(context));
+        }
+        Python py = Python.getInstance();
+        PyObject creatX = py.getModule("test").get("resetPassword");
+        PyObject result = creatX.call(input);
+        return String.valueOf(result);
+    }
+
+
 
     public static String getHashMsg_type2(Context context,String input){
         if (!Python.isStarted()) {
@@ -30,13 +72,13 @@ public class ecSHelper {
         return String.valueOf(result);
     }
 
-    public static String getSi(Context context, String privkey, String cGroup, String ki, String lGroup){
+    public static String getSi(Context context, String privkey, String cGroup, String ki, String lGroup, String Xgroup, String rSum){
         if (!Python.isStarted()) {
             Python.start(new AndroidPlatform(context));
         }
         Python py = Python.getInstance();
         PyObject creatX = py.getModule("test").get("createSi");
-        PyObject result = creatX.call(privkey,cGroup,ki,lGroup);
+        PyObject result = creatX.call(privkey,cGroup,ki,lGroup,Xgroup,rSum);
         return String.valueOf(result);
     }
 
@@ -46,6 +88,16 @@ public class ecSHelper {
         }
         Python py = Python.getInstance();
         PyObject creatX = py.getModule("test").get("hashMsg");
+        PyObject result = creatX.call(input);
+        return String.valueOf(result);
+    }
+
+    public static String getXcheck(Context context, String input){
+        if (!Python.isStarted()) {
+            Python.start(new AndroidPlatform(context));
+        }
+        Python py = Python.getInstance();
+        PyObject creatX = py.getModule("test").get("creatXpoint");
         PyObject result = creatX.call(input);
         return String.valueOf(result);
     }

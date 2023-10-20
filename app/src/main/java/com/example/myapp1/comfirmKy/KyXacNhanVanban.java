@@ -67,7 +67,7 @@ public class KyXacNhanVanban extends AppCompatActivity {
         List<FileModel> file_list = new ArrayList<>();
 
         SharedPreferences prefs = getSharedPreferences("preference_user", MODE_PRIVATE);
-        ResultSet rs = SelectDB.getVanBanKy(prefs.getString("user",""));
+        ResultSet rs = SelectDB.getVanBanKy(prefs.getString("id_user",""));
 //      Cho thêm thông tin về Nội dung cơ bản của các tệp, revert Tên tệp dài theo file ChonVanBan
         try {
             while (rs.next()) {

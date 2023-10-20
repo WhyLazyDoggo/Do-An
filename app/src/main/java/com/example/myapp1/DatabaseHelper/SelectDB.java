@@ -34,6 +34,21 @@ public class SelectDB {
         return rs;
     }
 
+    public static ResultSet getAllUser(){
+        ResultSet rs = null;
+        try {
+            Statement st = ConnectDatabase.ConnectionClass();
+
+            String query = "select * from `DB_ECC`.`tai_khoan` as tk join `DB_ECC`.`chu_ky_ca_nhan` as ckcn on tk.id = ckcn.id_taiKhoan;";
+            rs = st.executeQuery(query);
+        }
+        catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+        return rs;
+    }
+
+
     public static ResultSet getFileSignDone(){
         ResultSet rs = null;
         try {
@@ -111,13 +126,31 @@ public class SelectDB {
         return rs;
     }
 
+    public static ResultSet getXcheck(String id_nhomky){
+        ResultSet rs = null;
+        try {
+            Statement st = ConnectDatabase.ConnectionClass();
+
+            String col = "ckcn.id_taiKhoan, tmp.id_nhomky, ckcn.khoa_cong_khai";
+            String table ="`DB_ECC`.`trash` as tmp join `DB_ECC`.`chu_ky_ca_nhan` as ckcn on tmp.id_taiKhoan = ckcn.id_taiKhoan";
+            String where ="where tmp.id_nhomky ='"+id_nhomky+"'  order by created_at ";
+
+            String query = "select "+col+" from "+table+" "+where;
+            rs = st.executeQuery(query);
+        }
+        catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+        return rs;
+    }
+
 
     public static ResultSet getDataForSign(String id_nhomky, String id_process){
         ResultSet rs = null;
         try {
             Statement st = ConnectDatabase.ConnectionClass();
 
-            String col = "tmp.id, tmp.id_taiKhoan, tmp.id_nhomky, nk.L, nk.c , tmp.ki";
+            String col = "tmp.id, tmp.id_taiKhoan, tmp.id_nhomky, nk.L, nk.c , tmp.ki,nk.X, nk.Rsum";
             String table ="`DB_ECC`.`nhom_ky` as nk join `DB_ECC`.`trash` as tmp on nk.id = tmp.id_nhomky ";
             String where ="where tmp.id_nhomky ='"+id_nhomky+"' and tmp.id = '"+id_process+"'";
 
@@ -137,8 +170,8 @@ public class SelectDB {
             Statement st = ConnectDatabase.ConnectionClass();
 
             String col = "*";
-            String table ="DB_ECC.test_sign";
-            String where ="where idnew_table = "+username;
+            String table ="DB_ECC.chu_ky_ca_nhan";
+            String where ="where id_taiKhoan = "+username;
 
             String query = "select "+col+" from "+table+" "+where;
             rs = st.executeQuery(query);
@@ -253,7 +286,7 @@ public class SelectDB {
             String query = "select "+col+" from "+table+" "+where;
             System.out.println(query);
             rs = st.executeQuery(query);
-            rs.next();
+//            rs.next();
 
         }
         catch (SQLException ex) {

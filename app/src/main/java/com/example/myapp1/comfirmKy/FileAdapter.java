@@ -96,12 +96,32 @@ public class FileAdapter extends RecyclerView.Adapter <FileAdapter.ViewHolder>{
 
                             ResultSet rs = null;
 
+
+                            rs = SelectDB.getXcheck(id_nhomky);
+                            String Xcheck ="";
+                            String pubkey ="";
+
+                            try{
+                                while (rs.next()){
+                                    pubkey += rs.getString("khoa_cong_khai")+" ";
+
+                                }
+                            } catch (Exception ex){
+                            Log.e("error",ex.getMessage());
+                            }
+
+                            System.out.println("Giá trị pubkey:"+pubkey);
+                            String Xgroup_check = ecSHelper.getXcheck(context,pubkey);
+
+
                             rs = SelectDB.getDataForSign(id_nhomky,model.getId());
                             try{
                                 while (rs.next()){
                                     String c = rs.getString("c");
                                     String KiMain = rs.getString("ki");
                                     String Lgroup = rs.getString("L");
+                                    String Xgroup = rs.getString("X");
+                                    String Rsum = rs.getString("Rsum");
 
                                     System.out.println("Giá trị id_nhomky:"+model.getId_nhomKy());
                                     System.out.println("Giá trị id_process:"+model.getId());
@@ -109,7 +129,9 @@ public class FileAdapter extends RecyclerView.Adapter <FileAdapter.ViewHolder>{
                                     System.out.println("Giá trị ki:"+KiMain);
                                     System.out.println("Giá trị L:"+Lgroup);
                                     System.out.println("Giá trị private:"+privkeyMain);
-                                    String Si = ecSHelper.getSi(context,privkeyMain,c,KiMain,Lgroup);
+                                    String Si = ecSHelper.getSi(context,privkeyMain,c,KiMain,Lgroup,Xgroup_check,Rsum);
+
+
 
                                     System.out.println("Giá trị Si tính ra là:"+Si);
                                     UpdateDB.kyVanBan("pass","pass",Si,model.getId());
@@ -137,6 +159,7 @@ public class FileAdapter extends RecyclerView.Adapter <FileAdapter.ViewHolder>{
                                         System.out.println(msg);
                                         System.out.println(Xgroup);
                                         System.out.println(Rsum);
+                                        System.out.println("--------------------------");
                                     }else {
 
                                         try {

@@ -2,6 +2,9 @@ from typing import Tuple, Optional
 from binascii import unhexlify
 import hashlib
 import os
+import math, random
+#Check unidecode
+
 
 # Elliptic curve parameters
 p = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F
@@ -12,6 +15,24 @@ G = (0x79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798,
 # Points are tuples of X and Y coordinates
 # the point at infinity is represented by the None keyword
 Point = Tuple[int, int]
+
+def resetPassword(name):
+    # Remove accents from usernames
+    initials = ""
+    removeAccent = name.split()
+    i=0
+    for word in removeAccent:
+        initials += word[0]
+    # Random one number to add to password
+    val = str(random.randint(100, 999))
+    # Add numbers to the beginning of the username and reverse the string
+    new_str_list = list(initials)
+    new_str_list.insert (0, val)
+    new_str_list.reverse()
+    new_str = ''.join(new_str_list)
+    # Remove whitespace
+    new_passwd = new_str.replace(" ", "")
+    return new_passwd
 
 def createSignature(array,msg,X,R):
     sSum = 0
@@ -26,15 +47,38 @@ def createSignature(array,msg,X,R):
     signature_byte = bytes_from_point(Rs) + bytes_from_int(sSum)
     print(signature_byte.hex())
     if not schnorr_verify(str_to_bytes(msg), bytes_from_point(lift_x_even_y(str_to_bytes(X))), signature_byte):
+        print("Lỗi không qua hệ thống xác thực, thì sao update được...?")
         raise RuntimeError('The created signature does not pass verification.')
     return signature_byte.hex()
 
-def createSi(di,c,ki,L):
+def createSi(di,c,ki,L,Xx,Rsumm):
+
+
+
+    ki_process = int(ki)
 
     di = int_from_hex(str_to_bytes(di).hex())
     Pi = pubkey_point_gen_from_int(di)
     ai = int_from_bytes(sha256(str_to_bytes(L) + bytes_from_point(Pi)))
-    si = (di * int(c) * ai+ int(ki)) % n
+
+    phantu = [int(x.strip()) for x in Xx.strip('()').split(',')]  # bước 3
+    X = tuple(phantu)  # bước 4
+
+    # The aggregate public key X~ needs to be y-even
+    if not has_even_y(X):
+        ai = n - ai
+
+    # If the aggregated nonce does not have an even Y
+    # then negate  individual nonce scalars (and the aggregate nonce)
+
+    phantu = [int(x.strip()) for x in Rsumm.strip('()').split(',')]  # bước 3
+    Rsum = tuple(phantu)  # bước 4
+
+    if not has_even_y(Rsum):
+        ki_process = n - ki_process
+
+
+    si = (di * int(c) * ai+ ki_process) % n
     return si
 
 def hashMsg_type_2(M):
@@ -84,6 +128,34 @@ def createKi(pub_key, msg):
         Ri = point_mul(G, ki)
         assert Ri is not None
     return ki
+
+def creatXpoint(arrayy):
+
+    array = arrayy.split()
+
+    L = b''
+    for u in array:
+        L += str_to_bytes(u)
+    L = sha256(L)
+    X = None
+
+    for u in array:
+        # Get private key di and public key Pi
+        di = int_from_hex(u)
+        if not (1 <= di <= n - 1):
+            raise ValueError('The secret key must be an integer in the range 1..n-1.')
+        Pi = lift_x_even_y(str_to_bytes(u))
+        assert Pi is not None
+        # KeyAggCoef
+        # ai = h(L||Pi)
+        ai = int_from_bytes(sha256(L + bytes_from_point(Pi)))
+
+        # Computation of X~
+        # X~ = X1 + ... + Xn, Xi = ai * Pi
+        X = point_add(X, point_mul(Pi, ai))
+
+    return X
+
 
 def creatX(arrayy):
 

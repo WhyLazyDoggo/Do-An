@@ -170,19 +170,12 @@ public class ChonVanBan extends AppCompatActivity {
 
                 }
 
-
-
-
-
-
-
                 file_list.add(new ChonVanModel(rs.getString("id"), rs.getString("ten_van_ban") ,rs.getString("noidungtomtat") , rs.getString("created_at"),picture));
             }
         }catch (SQLException e) {
             System.out.println("Error");
             Log.e(null, "Error connection!!! Tạo bảng KyTucXa chưa Pa?");
         }
-
         return file_list;
     }
 

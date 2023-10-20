@@ -36,13 +36,68 @@ public class UpdateDB {
         }
     }
 
+    public static void updatePassword(String id , String hashPass,String status){
+        int rs;
+        try {
+            Statement st = ConnectDatabase.ConnectionClass();
+
+            String table ="";
+            String set="";
+            String where ="where ";
+            String query = "UPDATE `DB_ECC`.`tai_khoan` SET `password` = "+hashPass+", `status` = '"+status+"', `update_at` = current_timestamp()  WHERE `id` = "+id+";";
+            System.out.println(query);
+
+            rs = st.executeUpdate(query);
+        }
+        catch (SQLException ex) {
+            Log.e("Error when connect SQL", ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
+
+
+    public static void updateStatus(String id , String status){
+        int rs;
+        try {
+            Statement st = ConnectDatabase.ConnectionClass();
+
+            String query = "UPDATE `DB_ECC`.`tai_khoan` SET `status` = '"+status+"', `update_at` = current_timestamp() WHERE `id` = "+id+";";
+            System.out.println(query);
+
+            rs = st.executeUpdate(query);
+        }
+        catch (SQLException ex) {
+            Log.e("Error when connect SQL", ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
+
+
+
+    public static void updatetmp(String id , int avatar){
+        int rs;
+        try {
+            Statement st = ConnectDatabase.ConnectionClass();
+
+            String query = "UPDATE `DB_ECC`.`tai_khoan` SET `avatar` = "+avatar+" WHERE `id` = "+id+";";
+            System.out.println(query);
+
+            rs = st.executeUpdate(query);
+        }
+        catch (SQLException ex) {
+            Log.e("Error when connect SQL", ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
+
+
     public static void updateChuKy(String Signature , String id_nhom){
         int rs;
         try {
             Statement st = ConnectDatabase.ConnectionClass();
 
             String table ="`DB_ECC`.`nhom_ky`";
-            String set="signature = '"+Signature+"'";
+            String set="signature = '"+Signature+"', status = 'Hoàn thành'";
             String where ="where id = "+id_nhom;
             String query = "update "+table+" set "+ set +" "+where;
             System.out.println(query);

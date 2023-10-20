@@ -85,7 +85,7 @@ public class ChonVanAdapter extends RecyclerView.Adapter <ChonVanAdapter.ViewHol
                             editor.putString("noi_dung_van_ban",model.getDatafile());
                             editor.commit();
 
-                            Intent intent = new Intent( v.getRootView().getContext(), TaoNhomKy.class);
+                            Intent intent = new Intent(v.getRootView().getContext(), TaoNhomKy.class);
                             context.startActivity(intent);
                         }
                     });
