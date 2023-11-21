@@ -16,6 +16,31 @@ G = (0x79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798,
 # the point at infinity is represented by the None keyword
 Point = Tuple[int, int]
 
+
+def checkvefi(msg, pubkey, signature):
+    if not schnorr_verify(str_to_bytes(msg), str_to_bytes(pubkey), str_to_bytes(signature)):
+        return "hong"
+    else:
+        return "dung roi"
+
+def getpublickey(priKey):
+    privkey_int = int_from_hex(priKey)
+    publickey = pubkey_point_gen_from_int(privkey_int)
+    # Kiểm tra nếu privkey là số chẵn thì biến đổi, số lẻ giữ nguyên
+    privkey_even = privkey_int if has_even_y(publickey) else n - privkey_int
+    hex_privkey = hex(privkey_even).replace('0x', '').rjust(64, '0')
+    print("Privatekey cuối cùng = ",hex_privkey) #In ra khóa bí mật thôi không có ý nghĩa gì lắm
+    return bytes_from_point(publickey).hex()
+
+def getprivatekey():
+    t = xor_bytes(bytes_from_int(30112001), tagged_hash("BIP0340/aux", get_aux_rand()))
+    ki = int_from_bytes(tagged_hash("BIP0340/nonce", t)) % n
+
+    privkey_int = int_from_hex(hashlib.sha256(str(ki).encode()).hexdigest())
+    privkey_even = privkey_int if has_even_y(pubkey_point_gen_from_int(privkey_int)) else n - privkey_int
+    hex_privkey = hex(privkey_even).replace('0x', '').rjust(64, '0')
+    return hex_privkey
+
 def resetPassword(name):
     # Remove accents from usernames
     initials = ""

@@ -29,6 +29,11 @@ public class TaoNhomAdapter extends RecyclerView.Adapter <TaoNhomAdapter.ViewHol
         this.list = list;
     }
 
+    public void setList(List<TaoNhomModel> filterlist) {
+        this.list = filterlist;
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public TaoNhomAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -42,8 +47,13 @@ public class TaoNhomAdapter extends RecyclerView.Adapter <TaoNhomAdapter.ViewHol
         TaoNhomModel model = list.get(position);
         holder.imagine_view.setImageResource(model.getProfileImage());
         holder.user_name.setText(model.getUsername());
+
+        System.out.println(model.getPublickey());
+
+            holder.radio_btn.setChecked(model.isChecked());
+
         holder.decreption_tv.setText(model.getDecreption());
-//        holder.bind(list.get(position));
+
 
         holder.radio_btn.setOnClickListener(new View.OnClickListener() {
             @Override

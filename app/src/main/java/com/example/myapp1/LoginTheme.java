@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -38,16 +39,13 @@ public class LoginTheme extends AppCompatActivity {
 
     private Toast mToast;
     private long backPressedTime;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_theme);
 
-
-//        MaterialButton ButtonLogin = (MaterialButton) findViewById(R.id.ButtonLogin);
-
         Button ButtonLoginn = (Button) findViewById(R.id.ButtonLogin);
-        Button ButtonResent = (Button) findViewById(R.id.buttonResent);
 
         TextView textView = (TextView) findViewById(R.id.textView4);
         TextView username = (TextView) findViewById(R.id.username);
@@ -56,222 +54,136 @@ public class LoginTheme extends AppCompatActivity {
         username.setText("UserD");
         password.setText("1");
 
-        ButtonResent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showSuccessDialog();
-            }
-        });
 
 
         ButtonLoginn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences.Editor editor = getSharedPreferences("preference_user",MODE_PRIVATE).edit();
-
-
+                SharedPreferences.Editor editor = getSharedPreferences("preference_user", MODE_PRIVATE).edit();
 
                 String name = username.getText().toString();
                 String pass = password.getText().toString();
+                try {
+                    //Kiểm tra trường đã nhập đủ chưa
+                    if (name.length() > 0 && pass.length() > 0) {
+                        System.out.println("Mật khẩu khi băm thu được là: " + ecSHelper.sha256(pass));
 
+                        //Lấy thông tin check xem mật khẩu trùng với pass trước chưa gòi tính típ
+                        mToast = Toast.makeText(LoginTheme.this, "Đang đăng nhập vào hệ thống", Toast.LENGTH_SHORT);
+                        mToast.show();
+                        ResultSet rs = null;
 
-                if (name.length()>0 && pass.length()>0)
-                {
-                    System.out.println("Bản mã băm thử của hàm: " + ecSHelper.sha256(pass));
+                        rs = SelectDB.checkLogin(name, ecSHelper.sha256(pass));
+                        String role = "";
 
-                    //Lấy thông tin check xem mật khẩu trùng với pass trước chưa gòi tính típ
-
-                    mToast = Toast.makeText(LoginTheme.this, "Đang đăng nhập vào hệ thống", Toast.LENGTH_SHORT);
-                    mToast.show();
-                    ResultSet rs = null;
-                    rs = SelectDB.checkLogin(name,ecSHelper.sha256(pass));
-                    String role ="";
-
-                    //Trùng thì kiểm tra tới trạng thái hoạt động - Tùy vào trạng thái hoạt động rồi sẽ hiển thị thông tin khác biệt sau
-                try{
-
-                    if (rs.next()) {
-                        if (rs.getString("status").equals("Khóa")) {
-                            showErrorOneButton("Tài khoản bị đình chỉ", "Vui lòng liên hệ với quản lý hoặc trưởng phòng để mở khóa tài khoản!");
-                        }   else if(rs.getString("status").equals("Cài lại mật khẩu")){
-                            Intent intent = new Intent(LoginTheme.this, ResetPassword.class);
-                            startActivity(intent);
-                        } else {
-
-
-
-
-                            switch (rs.getString("role")) {
-                                case "Nhân viên" :
-
+                        //Trùng thì kiểm tra tới trạng thái hoạt động - Tùy vào trạng thái hoạt động rồi sẽ hiển thị thông tin khác biệt sau
+                        try {
+                            if (rs.next()) {
+                                if (rs.getString("status").equals("Khóa")) {
+                                    showErrorOneButton("Tài khoản bị đình chỉ", "Vui lòng liên hệ với quản lý hoặc trưởng phòng để mở khóa tài khoản!");
+                                } else {
                                     editor.clear();
-                                    editor.putString("user", rs.getString("id"));
-                                    editor.putString("pubkey", rs.getString("khoa_cong_khai"));
-                                    editor.putString("ten_nhan_vien", rs.getString("ten_nhan_vien"));
-                                    editor.putString("privatekey", getPrivateKey(rs.getString("id")));
-                                    editor.putString("role", rs.getString("role"));
+                                    //Lưu các thông tin chung của toàn bộ user Nhân viên / Trưởng phòng / HR / Khách hàng vô tri nữa
+                                    editor.putString("id_user", rs.getString(1));
+                                    editor.putString("avatar_user", rs.getString("avatar"));
+                                    editor.putString("username_user", rs.getString("username"));
+                                    editor.putString("name_user", rs.getString("ten_nhan_vien"));
+                                    editor.putString("role_user", rs.getString("chuc_vu"));
+                                    editor.putString("room_user", rs.getString("phong_ban"));
+                                    editor.putString("status_user", rs.getString("status"));
+                                    editor.putString("created_time_user", rs.getString("created_at"));
+                                    editor.putString("update_time_user", rs.getString("update_at"));
 
 
-
-                                    editor.putString("id_user",rs.getString(1));
-                                    editor.putString("avatar_user",rs.getString("avatar"));
-                                    editor.putString("username_user",rs.getString("username"));
-                                    editor.putString("name_user",rs.getString("ten_nhan_vien"));
-                                    editor.putString("role_user",rs.getString("role"));
-                                    editor.putString("room_user",rs.getString("phong_ban"));
-                                    editor.putString("status_user",rs.getString("status"));
-                                    editor.putString("created_time_user",rs.getString("created_at"));
-                                    editor.putString("update_time_user",rs.getString("update_at"));
+                                    if (rs.getString("status").equals("Cài lại mật khẩu") || rs.getString("status").equals("Tạo mới")) {
+                                        //Khi reset mật khẩu hoặc mới tạo thì cần khởi tạo lại mật khẩu mới
+                                        Intent intent = new Intent(LoginTheme.this, ResetPassword.class);
+                                        startActivity(intent);
 
 
-
-                                    break;
-
-                                case "Trưởng phòng":
-
-                                    editor.clear();
-                                    editor.putString("user", rs.getString("id"));
-                                    editor.putString("pubkey", rs.getString("khoa_cong_khai"));
-                                    editor.putString("ten_nhan_vien", rs.getString("ten_nhan_vien"));
-                                    editor.putString("privatekey", getPrivateKey(rs.getString("id")));
-                                    editor.putString("role", rs.getString("role"));
+                                    } else {
+                                        //Status bình thường rồi thì vào giao diện luôn
 
 
+                                        switch (rs.getString("chuc_vu")) {
+                                            case "Nhân viên":
+                                                editor.putString("pubkey", rs.getString("khoa_cong_khai"));
 
 
-                                    editor.putString("id_user",rs.getString(1));
-                                    editor.putString("avatar_user",rs.getString("avatar"));
-                                    editor.putString("username_user",rs.getString("username"));
-                                    editor.putString("name_user",rs.getString("ten_nhan_vien"));
-                                    editor.putString("role_user",rs.getString("role"));
-                                    editor.putString("room_user",rs.getString("phong_ban"));
-                                    editor.putString("status_user",rs.getString("status"));
-                                    editor.putString("created_time_user",rs.getString("created_at"));
-                                    editor.putString("update_time_user",rs.getString("update_at"));
+//                                                editor.putString("privatekey", getPrivateKey(rs.getString("id")));
 
 
-                                    break;
+                                                editor.putString("count_sign", SelectDB.getCount(rs.getString(1)));
+                                                break;
+
+                                            case "Trưởng phòng":
+                                                editor.putString("pubkey", rs.getString("khoa_cong_khai"));
 
 
-                                case "HR":
+//                                                editor.putString("privatekey", getPrivateKey(rs.getString("id")));
 
 
-                                    editor.clear();
-                                    editor.putString("user", rs.getString("id"));
-                                    editor.putString("ten_nhan_vien", rs.getString("ten_nhan_vien"));
-                                    editor.putString("role", rs.getString("role"));
+                                                editor.putString("count_sign", SelectDB.getCount(rs.getString(1)));
+                                                break;
+
+                                            case "HR":
+
+                                                break;
+
+                                            case "Khách hàng":
+
+                                                break;
+
+                                            default:
+                                                showErrorOneButton("Hả????", "Oh wow you have a bug");
+                                                break;
+
+                                        }
 
 
+                                        Intent intent = new Intent(LoginTheme.this, GiaoDienChinh.class);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                }
+                                editor.commit();
 
-
-
-
-                                    editor.putString("id_user",rs.getString(1));
-                                    editor.putString("avatar_user",rs.getString("avatar"));
-                                    editor.putString("username_user",rs.getString("username"));
-                                    editor.putString("name_user",rs.getString("ten_nhan_vien"));
-                                    editor.putString("role_user",rs.getString("role"));
-                                    editor.putString("room_user",rs.getString("phong_ban"));
-                                    editor.putString("status_user",rs.getString("status"));
-                                    editor.putString("created_time_user",rs.getString("created_at"));
-                                    editor.putString("update_time_user",rs.getString("update_at"));
-
-
-                                    break;
-
-                                default:
-                                    showErrorOneButton("Hả????", "Oh wow you have a bug");
-                                    break;
-
+                            } else {
+                                showErrorOneButton("Sai thông tin", "Bạn đã nhập sai tài khoản hoặc mật khẩu");
                             }
-
-                            Intent intent = new Intent(LoginTheme.this, GiaoDienChinh.class);
-                            startActivity(intent);
-                            finish();
-
+                        } catch (SQLException e) {
+                            Log.e("Lỗi đăng nhập", e.getMessage());
+                            System.out.println("Lỗi đăng nhập: "+e);
+                            showErrorOneButton("Lỗi đăng nhập", "Quá trình đăng nhập gặp sự cố\nVui lòng thử lại sau");
                         }
-
-                        editor.commit();
-
-                    }else {
-                        showErrorOneButton("Sai thông tin","Bạn đã nhập sai tài khoản hoặc mật khẩu");
+                    } else {
+                        mToast = Toast.makeText(LoginTheme.this, "Vui lòng điền đẩy đủ các trường thông tin", Toast.LENGTH_SHORT);
+                        mToast.show();
                     }
 
-                } catch (SQLException e) {
 
-                    showErrorOneButton("Lỗi đăng nhập","Quá trình đăng nhập gặp sự cố/nVui lòng thử lại sau");
-
-
-
-//                    throw new RuntimeException(e);
+                    if (backPressedTime + 2000 > System.currentTimeMillis()) {
+                        mToast.cancel();
+                    }
+                    backPressedTime = System.currentTimeMillis();
+                } catch (Exception e) {
+                    System.out.println("Error: " + e);
+                    showErrorOneButton("Lỗi đăng nhập", "Vui lòng thử lại sau");
                 }
-
-
-
-
-
-
-
-
-
-
-                    //Lấy in4 người dùng
-//                    try {
-//                        editor.clear();
-//                        editor.commit();
-//                        editor.putString("user",rs.getString("id"));
-//                        editor.putString("pubkey",rs.getString("khoa_cong_khai"));
-//                        editor.putString("ten_nhan_vien",rs.getString("ten_nhan_vien"));
-//                        editor.putString("privatekey",getPrivateKey(rs.getString("id")));
-//                        editor.putString("role",rs.getString("role"));
-//                        role = rs.getString("role");
-//                    } catch (SQLException e) {
-//                        throw new RuntimeException(e);
-//                    }
-//                    editor.commit();
-//                    System.out.println(role);
-//                    if (role.equals("HR")){
-//                        Intent intent = new Intent( LoginTheme.this, ManagerUser.class);
-//                        startActivity(intent);
-//                        finish();
-//                    }
-//                    else {
-//                        Intent intent = new Intent(LoginTheme.this, GiaoDienChinh.class);
-//                        startActivity(intent);
-//                        finish();
-//                    }
-//
-
-
-
-
-                }else {
-                    mToast = Toast.makeText(LoginTheme.this, "Vui lòng điền đẩy đủ các trường thông tin", Toast.LENGTH_SHORT);
-                    mToast.show();
-                }
-                if (backPressedTime + 2000 > System.currentTimeMillis()){
-                    mToast.cancel();
-                }
-                backPressedTime = System.currentTimeMillis();
-
-
-
-
             }
         });
 
     }
 
-
     @Override
     public void onBackPressed() {
 
-        if (backPressedTime + 2000 > System.currentTimeMillis()){
+        if (backPressedTime + 2000 > System.currentTimeMillis()) {
             mToast.cancel();
             super.onBackPressed();
             return;
-        }else{
-            mToast = Toast.makeText(LoginTheme.this,"Bấm lại lần nữa để thoát",Toast.LENGTH_SHORT);
+        } else {
+            mToast = Toast.makeText(LoginTheme.this, "Bấm lại lần nữa để thoát", Toast.LENGTH_SHORT);
             mToast.show();
         }
         backPressedTime = System.currentTimeMillis();
@@ -293,7 +205,6 @@ public class LoginTheme extends AppCompatActivity {
 
         AlertDialog alertDialog = builder.create();
 
-
         view.findViewById(R.id.buttonAction).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -310,12 +221,12 @@ public class LoginTheme extends AppCompatActivity {
     }
 
     @SuppressLint("MissingInflatedId")
-    private void showSuccessDialog(){
+    private void showSuccessDialog() {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(LoginTheme.this,R.style.AlertDialogTheme);
+        AlertDialog.Builder builder = new AlertDialog.Builder(LoginTheme.this, R.style.AlertDialogTheme);
         View view = LayoutInflater.from(LoginTheme.this).inflate(
                 R.layout.textdialog,
-                (ConstraintLayout)findViewById(R.id.layoutDialogContainer)
+                (ConstraintLayout) findViewById(R.id.layoutDialogContainer)
         );
         builder.setView(view);
 
@@ -324,8 +235,6 @@ public class LoginTheme extends AppCompatActivity {
         ((TextView) view.findViewById(R.id.textMessage)).setText("Chúc mừng thành công");
 
         ((Button) view.findViewById(R.id.buttonAction)).setText("Hoàn thành");
-
-
 
         AlertDialog alertDialog = builder.create();
 
@@ -336,7 +245,7 @@ public class LoginTheme extends AppCompatActivity {
             }
         });
 
-        if(alertDialog.getWindow()!=null){
+        if (alertDialog.getWindow() != null) {
             alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
         }
 
@@ -344,8 +253,8 @@ public class LoginTheme extends AppCompatActivity {
 
     }
 
-    private String getPrivateKey(String IdName){
-        String var="";
+    private String getPrivateKey(String IdName) {
+        String var = "";
         ResultSet rs = null;
 
         rs = SelectDB.getPrivateKey(IdName);
@@ -357,6 +266,5 @@ public class LoginTheme extends AppCompatActivity {
         }
         return var;
     }
-
 
 }

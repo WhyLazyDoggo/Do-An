@@ -61,7 +61,7 @@ public class checkNotDoneSignature extends AppCompatActivity {
         List<checkNotSignatureModel> file_list = new ArrayList<>();
         String user_id;
         SharedPreferences prefs = getSharedPreferences("preference_user", MODE_PRIVATE);
-        ResultSet rs = SelectDB.getProcessGroupSign(prefs.getString("id_user",""));
+        ResultSet rs = SelectDB.getProcessGroupSign(prefs.getString("id_user",""),prefs.getString("role_user",""),prefs.getString("room_user",""));
 //        file_list.add(new checkNotSignatureModel("" + (1 + 1), "Mickery", "10000", "4/5",R.drawable.pdf_icon));
 
         try {

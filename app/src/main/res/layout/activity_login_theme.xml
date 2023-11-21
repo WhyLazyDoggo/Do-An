@@ -73,7 +73,7 @@
 
         <EditText
             android:id="@+id/password"
-            android:layout_width="246dp"
+            android:layout_width="340dp"
             android:layout_height="50dp"
             android:layout_marginTop="18dp"
             android:background="@drawable/custom_editor_text"
@@ -88,18 +88,6 @@
             app:layout_constraintStart_toStartOf="@+id/username"
             app:layout_constraintTop_toBottomOf="@+id/username" />
 
-        <Button
-            android:id="@+id/buttonResent"
-            android:layout_width="80dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="18dp"
-            android:background="@drawable/custom_editor_text"
-            android:text="Gửi lại"
-            app:layout_constraintEnd_toEndOf="@+id/username"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/password"
-            app:layout_constraintTop_toBottomOf="@+id/username" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -110,6 +98,9 @@
         android:text="Đăng nhập"
         app:layout_constraintBottom_toBottomOf="parent"
         android:background="@drawable/button_error_bg"
+        android:textColor="#FFF"
+        android:textSize="17dp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />

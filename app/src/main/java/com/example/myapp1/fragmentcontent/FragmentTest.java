@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.myapp1.DatabaseHelper.SelectDB;
@@ -48,6 +49,10 @@ public class FragmentTest extends Fragment {
 
 
         mView = inflater.inflate(R.layout.fragment_test, container, false);
+
+
+//        spinner.addI
+
         Button btnSuccess = (Button) mView.findViewById(R.id.btnSuccess);
 
 

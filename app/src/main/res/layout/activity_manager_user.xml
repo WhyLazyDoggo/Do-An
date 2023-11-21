@@ -35,43 +35,29 @@
             android:textSize="20dp"
             android:textStyle="bold" />
 
-        <ImageView
+        <ImageButton
+            android:background="@drawable/icon_filter"
             android:id="@+id/filter"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="center"
-            android:layout_weight="1"
-            app:srcCompat="@drawable/icon_filter" />
+            android:layout_weight="1"/>
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="15dp"
         android:layout_marginEnd="10dp"
-        android:layout_marginBottom="25dp"
-        app:layout_constraintBottom_toTopOf="@id/button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/linearLayout" />
-    />
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:background="@drawable/button_error_bg"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:text="Ký văn bản từ máy"
-        android:textColor="#FFF"
-        android:textStyle="bold"
+        android:layout_marginBottom="45dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/linearLayout" /><![CDATA[
+    />
 
 
+]]>
 </androidx.constraintlayout.widget.ConstraintLayout>

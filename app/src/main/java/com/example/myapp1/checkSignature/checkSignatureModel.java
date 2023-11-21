@@ -1,5 +1,7 @@
 package com.example.myapp1.checkSignature;
 
+import java.util.List;
+
 public class checkSignatureModel {
     String id;
     String name;
@@ -11,6 +13,9 @@ public class checkSignatureModel {
     String date;
     int profileImagine;
     Integer MAX_SIZE= 16;
+
+    String tmp;
+    List<String> subMember;
 
     public checkSignatureModel(String id, String name,String datafile, String date,String signature,String group_key, int profileImagine) {
         this.id = id;
@@ -25,7 +30,35 @@ public class checkSignatureModel {
         this.profileImagine = profileImagine;
     }
 
+    public String getTmp() {
+        return tmp;
+    }
 
+    public void setTmp(String tmp) {
+        this.tmp = tmp;
+    }
+
+    public void addMember(String Member) {
+        subMember.add(Member);
+    }
+
+    public List<String> getSubMember() {
+        return subMember;
+    }
+
+    public void setSubMember(List<String> subMember) {
+        this.subMember = subMember;
+    }
+
+    public void displayInfo() {
+        System.out.println(getId());
+        System.out.println(getName());
+        System.out.println(getSignature());
+        System.out.println("Giá trị check nè: "+getTmp());
+        for (String subject : subMember) {
+            System.out.println(subject);
+        }
+    }
     public checkSignatureModel() {
 
     }

@@ -31,6 +31,11 @@ public class UserAdapter extends RecyclerView.Adapter <UserAdapter.ViewHolder> {
         this.list=list;
     }
 
+    public void setList(List<UserModel> filterlist) {
+        this.list = filterlist;
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public UserAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -45,7 +50,14 @@ public class UserAdapter extends RecyclerView.Adapter <UserAdapter.ViewHolder> {
             UserModel model = list.get(position);
             holder.imagine_view.setImageResource(model.getProfileImage());
             holder.user_name.setText(model.getFullname());
-            holder.second_tv.setText(model.getRole()+" / "+model.getPhong_ban());
+
+            if (model.getStatus().equals("Hoạt động")) {
+
+                holder.second_tv.setText(model.getRole() + " / " + model.getPhong_ban());
+            }else{
+                holder.second_tv.setText("Đang đình chỉ do: "+model.getStatus());
+            }
+
             holder.select_btn.setText("Xem");
 
             holder.select_btn.setOnClickListener(new View.OnClickListener() {

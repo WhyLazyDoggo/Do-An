@@ -28,7 +28,6 @@ public class GiaoDienChinh extends AppCompatActivity {
 
     private Fragment fragInfo = new FragmentInfoAll();
 
-
     private MeowBottomNavigation bottomNavigation;
 
     @Override
@@ -38,20 +37,19 @@ public class GiaoDienChinh extends AppCompatActivity {
 
         bottomNavigation = findViewById(R.id.bottomNavigation);
 
-        bottomNavigation.show(1,true);
+        bottomNavigation.show(1, true);
         replaceFragment(new FragmentHome());
 
         bottomNavigation.add(new MeowBottomNavigation.Model(1, R.drawable.home_icon));
-        bottomNavigation.add(new MeowBottomNavigation.Model(2,R.drawable.sign_icon));
-        bottomNavigation.add(new MeowBottomNavigation.Model(3,R.drawable.finger));
+        bottomNavigation.add(new MeowBottomNavigation.Model(2, R.drawable.sign_icon));
+        bottomNavigation.add(new MeowBottomNavigation.Model(3, R.drawable.settingreplacefinger));
 
-
-        bottomNavigation.setOnClickMenuListener(new Function1<MeowBottomNavigation.Model, Unit>() {
+        bottomNavigation.setOnClickMenuListener(new Function1 < MeowBottomNavigation.Model, Unit > () {
             @Override
             public Unit invoke(MeowBottomNavigation.Model model) {
                 // YOUR CODES
 
-                switch (model.getId()){
+                switch (model.getId()) {
 
                     case 1:
                         replaceFragment(new FragmentHome());
@@ -67,18 +65,16 @@ public class GiaoDienChinh extends AppCompatActivity {
 
                 }
 
-
                 return null;
             }
         });
 
-        bottomNavigation.setOnShowListener(new Function1<MeowBottomNavigation.Model, Unit>() {
+        bottomNavigation.setOnShowListener(new Function1 < MeowBottomNavigation.Model, Unit > () {
             @Override
             public Unit invoke(MeowBottomNavigation.Model model) {
                 // YOUR CODES
 
-
-                switch (model.getId()){
+                switch (model.getId()) {
 
                     case 1:
                         replaceFragment(new FragmentHome());
@@ -89,13 +85,12 @@ public class GiaoDienChinh extends AppCompatActivity {
             }
         });
 
-        bottomNavigation.setOnShowListener(new Function1<MeowBottomNavigation.Model, Unit>() {
+        bottomNavigation.setOnShowListener(new Function1 < MeowBottomNavigation.Model, Unit > () {
             @Override
             public Unit invoke(MeowBottomNavigation.Model model) {
                 // YOUR CODES
 
-
-                switch (model.getId()){
+                switch (model.getId()) {
 
                     case 2:
                         replaceFragment(new FragmentSign());
@@ -106,13 +101,12 @@ public class GiaoDienChinh extends AppCompatActivity {
             }
         });
 
-        bottomNavigation.setOnShowListener(new Function1<MeowBottomNavigation.Model, Unit>() {
+        bottomNavigation.setOnShowListener(new Function1 < MeowBottomNavigation.Model, Unit > () {
             @Override
             public Unit invoke(MeowBottomNavigation.Model model) {
                 // YOUR CODES
 
-
-                switch (model.getId()){
+                switch (model.getId()) {
 
                     case 3:
                         replaceFragment(fragInfo);
@@ -125,11 +119,10 @@ public class GiaoDienChinh extends AppCompatActivity {
 
     }
 
-
-    private void replaceFragment(Fragment fragment){
+    private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frame_layout,fragment);
+        fragmentTransaction.replace(R.id.frame_layout, fragment);
         fragmentTransaction.commit();
 
     }
@@ -137,14 +130,14 @@ public class GiaoDienChinh extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-        if (backPressedTime + 2000 > System.currentTimeMillis()){
+        if (backPressedTime + 2000 > System.currentTimeMillis()) {
             mToast.cancel();
 
             finish();
             super.onBackPressed();
             return;
-        }else{
-            mToast = Toast.makeText(GiaoDienChinh.this,"Bấm lại lần nữa để thoát",Toast.LENGTH_SHORT);
+        } else {
+            mToast = Toast.makeText(GiaoDienChinh.this, "Bấm lại lần nữa để thoát", Toast.LENGTH_SHORT);
             mToast.show();
         }
         backPressedTime = System.currentTimeMillis();

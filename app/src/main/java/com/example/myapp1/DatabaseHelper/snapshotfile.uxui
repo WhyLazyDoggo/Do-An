@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutDialogContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:padding="20dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutDialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/dialog_background"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textView17"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="15dp"
+            android:text="Lọc và tìm kiếm"
+            android:textColor="#252D4B"
+            android:textSize="28dp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/etSearch"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/border_inputext"
+            android:drawableStart="@drawable/icon_find"
+
+            android:drawablePadding="8dp"
+            android:ems="10"
+            android:hint="Tìm kiếm văn bản"
+            android:inputType="textPersonName"
+            android:padding="14dp"
+            android:textColor="@color/black"
+
+            android:textColorHighlight="@color/black"
+            android:textColorHint="#A3A6B0"
+            android:textSize="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView17" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="60dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+
+            app:layout_constraintTop_toBottomOf="@+id/etSearch"
+            app:layout_constraintVertical_bias="0.0">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout4"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/textView14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Thể loại sắp xếp"
+
+                    android:textColor="#414862"
+                    android:textSize="18dp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/btnAll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/button_gray_20c"
+                    android:text="Toàn bộ"
+                    android:textAllCaps="false"
+                    android:textColor="#253238"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView14" />
+
+                <Button
+                    android:id="@+id/btnTrue"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/button_red_20c"
+                    android:text="Lọc đúng"
+                    android:textAllCaps="false"
+                    android:textColor="#FFF"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toEndOf="@+id/btnAll"
+                    app:layout_constraintTop_toBottomOf="@+id/textView14" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout5"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout4">
+
+                <TextView
+                    android:id="@+id/textView15"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:text="Lựa chọn phòng ban"
+                    android:textColor="#414862"
+                    android:textSize="18dp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/btnKeToan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/button_red_20c"
+
+                    android:text="Kế toán"
+                    android:textAllCaps="false"
+                    android:textColor="#FFF"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView15" />
+
+                <Button
+                    android:id="@+id/btnHanhChinh"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/button_gray_20c"
+
+                    android:text="  Hành chính  "
+
+                    android:textAllCaps="false"
+                    android:textColor="#414862"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toEndOf="@+id/btnKeToan"
+                    app:layout_constraintTop_toBottomOf="@+id/textView15" />
+
+                <Button
+                    android:id="@+id/btnMarketing"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+
+                    android:background="@drawable/button_gray_20c"
+
+                    android:text="  Marketing  "
+                    android:textAllCaps="false"
+                    android:textColor="#414862"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toEndOf="@+id/btnHanhChinh"
+                    app:layout_constraintTop_toBottomOf="@+id/textView15" />
+
+                <Button
+                    android:id="@+id/btnNghienCuu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_marginStart="20dp"
+
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/button_gray_20c"
+                    android:text="  Nghiên cứu  "
+                    android:textAllCaps="false"
+                    android:textColor="#414862"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/btnKeToan" />
+
+                <Button
+                    android:id="@+id/btnTaiChinh"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_marginStart="10dp"
+
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/button_gray_20c"
+                    android:text="  Tài chính  "
+                    android:textAllCaps="false"
+                    android:textColor="#414862"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toEndOf="@+id/btnNghienCuu"
+                    app:layout_constraintTop_toBottomOf="@+id/btnKeToan" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout5">
+
+                <Button
+                    android:id="@+id/btnTruongPhong"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/button_gray_20c"
+                    android:text="   Trưởng phòng   "
+                    android:textAllCaps="false"
+                    android:textColor="#253238"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView16" />
+
+                <Button
+                    android:id="@+id/btnNhanVien"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/button_gray_20c"
+                    android:text="Nhân viên"
+                    android:textAllCaps="false"
+                    android:textColor="#253238"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toEndOf="@+id/btnTruongPhong"
+                    app:layout_constraintTop_toBottomOf="@+id/textView16" />
+
+                <TextView
+                    android:id="@+id/textView16"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:text="Lựa chọn chức vụ"
+                    android:textColor="#414862"
+                    android:textSize="18dp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Button
+        android:id="@+id/buttonNo"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/button_netural_bg"
+        android:textColor="@color/white"
+        android:text="Reset all"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@id/layoutDialog"
+        app:layout_constraintEnd_toStartOf="@id/buttonAction"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layoutDialog"/>
+
+    <Button
+        android:id="@+id/buttonAction"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="40dp"
+        android:background="@drawable/button_error_bg"
+        android:textColor="@color/white"
+        android:text="Áp dụng"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@id/layoutDialog"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/buttonNo"
+        app:layout_constraintTop_toBottomOf="@id/layoutDialog"/>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

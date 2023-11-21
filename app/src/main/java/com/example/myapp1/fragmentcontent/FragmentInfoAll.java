@@ -15,8 +15,13 @@ import androidx.fragment.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.myapp1.ChangePassword;
+import com.example.myapp1.DatabaseHelper.ecSHelper;
+import com.example.myapp1.HistorySign;
+import com.example.myapp1.InfoProgram;
 import com.example.myapp1.LoginTheme;
 import com.example.myapp1.MainActivity;
 import com.example.myapp1.ManagerTask.ShowDetailActivity;
@@ -31,6 +36,8 @@ public class FragmentInfoAll extends Fragment {
     private ConstraintLayout LayoutHistory;
     private ConstraintLayout LayoutProgram;
     private ConstraintLayout LayoutLogOut;
+
+    private TextView tvName,tvRole;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,9 +55,17 @@ public class FragmentInfoAll extends Fragment {
         LayoutProgram = view.findViewById(R.id.LayoutProgram);
         LayoutLogOut = view.findViewById(R.id.LayoutLogOut);
 
+        tvName = view.findViewById(R.id.tvName);
+        tvRole = view.findViewById(R.id.tvRole);
+        ImageView ivAvatar = view.findViewById(R.id.avatar);
+        ivAvatar.setImageResource(ecSHelper.getAvatarPicture(prefs.getString("avatar_user","")));
+
+        tvName.setText(prefs.getString("name_user",""));
+        tvRole.setText(prefs.getString("role_user",""));
+
         LayoutInfo.setOnClickListener(v -> {
             UserModel user = new UserModel(prefs.getString("id_user",""),
-                    Integer.parseInt(prefs.getString("avatar_user","")),
+                    ecSHelper.getAvatarPicture(prefs.getString("avatar_user","0")),
                     prefs.getString("username_user",""),
                     prefs.getString("name_user",""),
                     prefs.getString("role_user",""),
@@ -58,20 +73,8 @@ public class FragmentInfoAll extends Fragment {
                     prefs.getString("status_user",""),
                     prefs.getString("created_time_user",""),
                     prefs.getString("update_time_user",""));
-
-
-
             Intent intent = new Intent(getContext(), ShowDetailActivity.class);
             intent.putExtra("object",user);
-
-
-
-
-
-
-
-
-
 
             startActivity(intent);
         });
@@ -82,11 +85,14 @@ public class FragmentInfoAll extends Fragment {
         });
 
         LayoutHistory.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), HistorySign.class);
+            startActivity(intent);
 
         });
 
         LayoutProgram.setOnClickListener(v -> {
-
+            Intent intent = new Intent(getContext(), InfoProgram.class);
+            startActivity(intent);
         });
 
         LayoutLogOut.setOnClickListener(v -> {

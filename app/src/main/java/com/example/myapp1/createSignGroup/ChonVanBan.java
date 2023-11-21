@@ -6,16 +6,24 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.myapp1.DatabaseHelper.SelectDB;
 import com.example.myapp1.R;
@@ -32,6 +40,9 @@ public class ChonVanBan extends AppCompatActivity {
     RecyclerView recycler_view;
 
     ChonVanAdapter adapter;
+    List<ChonVanModel> file_list = new ArrayList<>();
+
+    String textFilter ="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,97 +54,59 @@ public class ChonVanBan extends AppCompatActivity {
         recycler_view = findViewById(R.id.recycler_view);
 
         setRecycleView();
+
+        ImageView filter = findViewById(R.id.filter);
+
+        filter.setOnClickListener(v -> {
+            Dialog dialog = new Dialog(this);
+            dialog.setContentView(R.layout.filter_van_ban);
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            dialog.getWindow().setGravity(Gravity.TOP);
+            dialog.show();
+
+            SearchView svSearch = dialog.findViewById(R.id.svSearch);
+            svSearch.setQuery(textFilter,false);
+            svSearch.clearFocus();
+            svSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    System.out.println("Đang tìm kiếm văn bản");
+                    filterList(newText);
+                    textFilter = newText;
+                    return true;
+                }
+            });
+
+
+        });
+
+
+
+    }
+
+    private void filterList(String newText) {
+        List<ChonVanModel> filter_list = new ArrayList<>();
+        for (ChonVanModel item : file_list){
+            if (item.getFullname().toLowerCase().contains(newText.toLowerCase())){
+                filter_list.add(item);
+            }
+        }
+
+        if (filter_list.isEmpty()){
+            Toast.makeText(this,"Không tìm thấy", Toast.LENGTH_SHORT).show();
+        } else {
+            adapter.setList(filter_list);
+        }
+
     }
 
     //Thêm chức năng khi quay lại sẽ tự động update lại văn bản
-
-    public void testDialog() {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(ChonVanBan.this,R.style.AlertDialogTheme);
-        View view = LayoutInflater.from(ChonVanBan.this).inflate(
-                R.layout.popup_info_file_for_signer,
-                (ConstraintLayout)findViewById(R.id.layoutDialogContainer)
-        );
-        builder.setView(view);
-
-        ((TextView) view.findViewById(R.id.name_file)).setText("Tệp tên xyz");
-
-        ((TextView) view.findViewById(R.id.textDumpInfo)).setText("Nội dung cơ bản:" +
-                "\n <<<Hình ảnh về tệp các thứ" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n\t\t\t >>>>>");
-
-        ((Button) view.findViewById(R.id.buttonAction)).setText("Xác nhận giao");
-        ((Button) view.findViewById(R.id.buttonNo)).setText("Thoát");
-
-
-
-        AlertDialog alertDialog = builder.create();
-
-        view.findViewById(R.id.buttonAction).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
-                System.out.println("-------------------------------------------------------------");
-                System.out.println("Bạn đã click thành công");
-                System.out.println("-------------------------------------------------------------");
-                Intent intent = new Intent( ChonVanBan.this, TaoNhomKy.class);
-                startActivity(intent);
-            }
-        });
-
-        view.findViewById(R.id.buttonNo).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
-            }
-        });
-
-        if(alertDialog.getWindow()!=null){
-            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
-
-        }
-
-        alertDialog.show();
-
-    }
-
-    private void showChoiceDialog() {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(ChonVanBan.this,R.style.AlertDialogTheme);
-        View view = LayoutInflater.from(ChonVanBan.this).inflate(
-                R.layout.textdialog,
-                (ConstraintLayout)findViewById(R.id.layoutDialogContainer)
-        );
-        builder.setView(view);
-
-        ((TextView) view.findViewById(R.id.textMain)).setText("Day chi la ban thu nghiem danh cho mot doan van viet dai vo cung dai de xem co tu xuong dong khong");
-
-        ((TextView) view.findViewById(R.id.textMessage)).setText("Chúc mừng thành công");
-
-        ((Button) view.findViewById(R.id.buttonAction)).setText("Hoàn thành");
-
-
-
-        AlertDialog alertDialog = builder.create();
-
-        view.findViewById(R.id.buttonAction).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
-            }
-        });
-
-        if(alertDialog.getWindow()!=null){
-            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
-
-        }
-
-        alertDialog.show();
-
-    }
 
     private void setRecycleView() {
         recycler_view.setHasFixedSize(true);
@@ -143,16 +116,14 @@ public class ChonVanBan extends AppCompatActivity {
     }
 
     private List<ChonVanModel> getList() {
-        List<ChonVanModel> file_list = new ArrayList<>();
-
         ResultSet rs = SelectDB.getVanBan(null, null);
         try{
             while (rs.next()){
                 String type_file = rs.getString("ten_van_ban");
                 int picture = R.drawable.xls_icon;
                 int lastDotIndex = type_file.lastIndexOf(".");
-                if (lastDotIndex != -1) {
 
+                if (lastDotIndex != -1) {
                     switch (type_file.substring(lastDotIndex)) {
                         case ".txt":
                             picture = R.drawable.txt_icon;
@@ -167,10 +138,10 @@ public class ChonVanBan extends AppCompatActivity {
                             picture = R.drawable.xls_icon;
                             break;
                     }
-
                 }
 
-                file_list.add(new ChonVanModel(rs.getString("id"), rs.getString("ten_van_ban") ,rs.getString("noidungtomtat") , rs.getString("created_at"),picture));
+
+                file_list.add(new ChonVanModel(rs.getString("id"), rs.getString("ten_van_ban") ,rs.getString("noi_dung_tom_tat") , rs.getString("created_at"),picture));
             }
         }catch (SQLException e) {
             System.out.println("Error");

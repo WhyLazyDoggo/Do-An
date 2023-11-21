@@ -5,6 +5,7 @@ public class TaoNhomModel {
     String id;
     String username;
     String decreption;
+    String publickey;
 
     private boolean isChecked = false;
 
@@ -16,11 +17,20 @@ public class TaoNhomModel {
         isChecked = checked;
     }
 
-    public TaoNhomModel(int profileImage, String id, String username, String decreption) {
+    public TaoNhomModel(int profileImage, String id, String username, String decreption,String publickey) {
         this.profileImage = profileImage;
         this.id = id;
         this.username = username;
         this.decreption = decreption;
+        this.publickey = publickey;
+    }
+
+    public String getPublickey() {
+        return publickey;
+    }
+
+    public void setPublickey(String publickey) {
+        this.publickey = publickey;
     }
 
     public TaoNhomModel() {

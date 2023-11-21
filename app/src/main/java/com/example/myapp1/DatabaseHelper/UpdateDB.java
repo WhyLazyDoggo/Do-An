@@ -22,10 +22,8 @@ public class UpdateDB {
         try {
             Statement st = ConnectDatabase.ConnectionClass();
 
-            String table ="";
-            String set="";
-            String where ="where ";
-            String query = "update "+table+" set "+ set +" "+where;
+
+            String query = "update";
             System.out.println(query);
 
             rs = st.executeUpdate(query);
@@ -36,6 +34,26 @@ public class UpdateDB {
         }
     }
 
+
+    public static void updateDeleteAllChuKy(String id_user){
+        int rs;
+        try {
+            Statement st = ConnectDatabase.ConnectionClass();
+
+            String query = "update `Data_Sign`.`chu_ky_ca_nhan` " +
+                            "SET `ngay_het_han` = DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 WEEK) " +
+                                "WHERE `id_tai_khoan` = '"+id_user+"';";
+            System.out.println(query);
+
+            rs = st.executeUpdate(query);
+        }
+        catch (SQLException ex) {
+            Log.e("Error when connect SQL", ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
+
+
     public static void updatePassword(String id , String hashPass,String status){
         int rs;
         try {
@@ -44,7 +62,7 @@ public class UpdateDB {
             String table ="";
             String set="";
             String where ="where ";
-            String query = "UPDATE `DB_ECC`.`tai_khoan` SET `password` = "+hashPass+", `status` = '"+status+"', `update_at` = current_timestamp()  WHERE `id` = "+id+";";
+            String query = "UPDATE `Data_Sign`.`tai_khoan` SET `password` = '"+hashPass+"', `status` = '"+status+"', `update_at` = current_timestamp()  WHERE `id` = "+id+";";
             System.out.println(query);
 
             rs = st.executeUpdate(query);
@@ -62,6 +80,9 @@ public class UpdateDB {
             Statement st = ConnectDatabase.ConnectionClass();
 
             String query = "UPDATE `DB_ECC`.`tai_khoan` SET `status` = '"+status+"', `update_at` = current_timestamp() WHERE `id` = "+id+";";
+
+            query ="UPDATE `Data_Sign`.`tai_khoan` SET `status` = '"+status+"', `update_at` = current_timestamp() WHERE `id` = "+id+";";
+
             System.out.println(query);
 
             rs = st.executeUpdate(query);
@@ -96,7 +117,7 @@ public class UpdateDB {
         try {
             Statement st = ConnectDatabase.ConnectionClass();
 
-            String table ="`DB_ECC`.`nhom_ky`";
+            String table ="`Data_Sign`.`nhom_ky`";
             String set="signature = '"+Signature+"', status = 'Hoàn thành'";
             String where ="where id = "+id_nhom;
             String query = "update "+table+" set "+ set +" "+where;
@@ -110,14 +131,14 @@ public class UpdateDB {
         }
     }
 
-    public static void updateNhomKy(String khoa_cong_khai_nhom,String Xgroup, String Rsum,String cGroup,String hash_vanban,String find){
+    public static void updateNhomKy(String khoa_cong_khai_nhom,String Xgroup, String Rsum,String cGroup,String find){
         int rs;
         try {
             Statement st = ConnectDatabase.ConnectionClass();
 
-            String table ="`DB_ECC`.`nhom_ky`";
-            String set="`L` = '"+khoa_cong_khai_nhom+"', `X` = '"+Xgroup+"', `Rsum` = '"+ Rsum +"', `c` = '"+cGroup+"', `hash_vanban` = \""+hash_vanban+"\"";
-            String where ="where `hash_vanban` = '"+find+"'";
+            String table ="`Data_Sign`.`nhom_ky`";
+            String set="`L` = '"+khoa_cong_khai_nhom+"', `X` = '"+Xgroup+"', `Rsum` = '"+ Rsum +"', `c` = '"+cGroup+"', `status` = 'Chưa xong'";
+            String where ="where `status` = '"+find.substring(0, 49)+"'";
             String query = "update "+table+" set "+ set +" "+where;
             System.out.println(query);
 
@@ -133,9 +154,9 @@ public class UpdateDB {
         try {
             Statement st = ConnectDatabase.ConnectionClass();
 
-            String table ="`DB_ECC`.`trash`";
-            String set="`status` = 'Đã ký', `Si` = '"+Si+"'";
-            String where ="where (`id_taiKhoan` = '"+ id_taiKhoan +"' AND `id_nhomky` = '"+ id_nhomky +"') or id = '"+id_canKy+"'";
+            String table ="`Data_Sign`.`tien_trinh_ky`";
+            String set="`status` = 'Đã ký', `chu_ky_ca_nhan` = '"+Si+"'";
+            String where ="where (`id_tai_khoan` = '"+ id_taiKhoan +"' AND `id_nhom_ky` = '"+ id_nhomky +"') or id = '"+id_canKy+"'";
 
             String query = "update "+table+" set "+ set +" "+where;
 
