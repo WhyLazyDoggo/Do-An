@@ -412,6 +412,8 @@ public class SelectDB {
 
             query = "select * from `Data_Sign`.`tai_khoan` as tk left join `Data_Sign`.`chu_ky_ca_nhan` as ckcn on tk.id = ckcn.id_tai_khoan where (ngay_het_han > current_timestamp() or ngay_het_han is NULL) and tk.username = ? and tk.password = ? ;";
 
+            System.out.println(query);
+
             try  {
                 PreparedStatement preparedStatement = conn.prepareStatement(query);
                 preparedStatement.setString(1, username);

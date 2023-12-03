@@ -4,12 +4,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.SearchView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.myapp1.DatabaseHelper.SelectDB;
 import com.example.myapp1.R;
@@ -25,7 +32,8 @@ public class checkSignatureDone extends AppCompatActivity {
     RecyclerView recycler_view;
 
     checkSignatureAdapter adapter;
-
+    List<checkSignatureModel> file_list = new ArrayList<>();
+    String textFilter = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,28 +53,29 @@ public class checkSignatureDone extends AppCompatActivity {
             }
         });
 
+        setFilter();
     }
 
     private void setRecycleView() {
         recycler_view.setHasFixedSize(true);
         recycler_view.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new checkSignatureAdapter(this,getList());
+        adapter = new checkSignatureAdapter(this, getList());
         recycler_view.setAdapter(adapter);
     }
 
-    private List<checkSignatureModel> getList(){
-        List<checkSignatureModel> file_list = new ArrayList<>();
+    private List<checkSignatureModel> getList() {
+
         ResultSet rs = SelectDB.getFileSignDone();
 
         String temp = "";
-        String tmpmember ="";
+        String tmpmember = "";
         List<String> addMember = new ArrayList<>();
         checkSignatureModel add = new checkSignatureModel();
         int check = 1;
         int count = 0;
         try {
-            while (rs.next()){
-                count ++;
+            while (rs.next()) {
+                count++;
                 String type_file = rs.getString("ten_van_ban");
                 int picture = R.drawable.xls_icon;
                 int lastDotIndex = type_file.lastIndexOf(".");
@@ -88,32 +97,28 @@ public class checkSignatureDone extends AppCompatActivity {
 
                 }
 
-                checkSignatureModel tmp = new checkSignatureModel(rs.getString("id"),rs.getString("ten_van_ban"),
-                        rs.getString("noi_dung_tom_tat"),rs.getString("created_at"),
-                        rs.getString("signature"),rs.getString("X"),picture);
+                checkSignatureModel tmp = new checkSignatureModel(rs.getString("id"), rs.getString("ten_van_ban"),
+                        rs.getString("noi_dung_tom_tat"), rs.getString("created_at"),
+                        rs.getString("signature"), rs.getString("X"), picture);
 
-
-
-                if (check==1){
+                if (check == 1) {
                     //Đây là giá trị đầu tiên, nên sẽ cho vào làm đầu và thêm toàn bộ thông tin như bình thường, khởi tạo id user các thứ luôn
                     add = tmp;
-                    System.out.println("Thêm nhân viên vào văn bản "+rs.getString("id")+" / "+rs.getString("ten_nhan_vien"));
+                    System.out.println("Thêm nhân viên vào văn bản " + rs.getString("id") + " / " + rs.getString("ten_nhan_vien"));
 
                     addMember.add(rs.getString("ten_nhan_vien"));
-                    tmpmember = tmpmember+"- "+rs.getString("ten_nhan_vien") +"\n";
+                    tmpmember = tmpmember + "- " + rs.getString("ten_nhan_vien") + "\n";
 
-                    check=2;
-                } else if ((add.getSignature().equals(tmp.getSignature()))){
+                    check = 2;
+                } else if ((add.getSignature().equals(tmp.getSignature()))) {
                     //Cái này là thêm nhân viên vào bên trong thôi, không có gì đáng trách cả
-                    System.out.println("Thêm nhân viên vào văn bản "+rs.getString("id")+" / "+rs.getString("ten_nhan_vien"));
+                    System.out.println("Thêm nhân viên vào văn bản " + rs.getString("id") + " / " + rs.getString("ten_nhan_vien"));
 
                     addMember.add(rs.getString("ten_nhan_vien"));
-                    tmpmember = tmpmember+"- "+rs.getString("ten_nhan_vien") +"\n";
+                    tmpmember = tmpmember + "- " + rs.getString("ten_nhan_vien") + "\n";
 
-                }else{
+                } else {
                     //Trường hợp cuối cùng, tức là đã lấy hết thông tin
-
-
                     add.setSubMember(addMember);
                     add.setTmp(tmpmember);
                     add.displayInfo();
@@ -131,65 +136,102 @@ public class checkSignatureDone extends AppCompatActivity {
                     System.out.println("--- ---");
 
                     addMember.clear();
-                    tmpmember="";
+                    tmpmember = "";
                     add = tmp;
                     addMember.add(rs.getString("ten_nhan_vien"));
-                    tmpmember = tmpmember+"- "+rs.getString("ten_nhan_vien") +"\n";
+                    tmpmember = tmpmember + "- " + rs.getString("ten_nhan_vien") + "\n";
                 }
-
-//
-//                if ((temp.equals(rs.getString("signature"))) || (check==1)){
-//
-//                    System.out.println("Thêm giá trị thặng dư");
-//                    System.out.println("Thêm nhân viên vào văn bản "+rs.getString("id")+" / "+rs.getString("ten_nhan_vien"));
-//                    addMember.add(rs.getString("ten_nhan_vien"));
-//                    check = 2;
-//                    System.out.println("Check count= "+count);
-//                    temp = rs.getString("signature");
-//
-//
-//                }else{
-//                    System.out.println("Check count= "+count);
-//                    temp = rs.getString("signature");
-//                    checkSignatureModel tmp = new checkSignatureModel(rs.getString("id"),rs.getString("ten_van_ban"),
-//                            rs.getString("noidungtomtat"),rs.getString("created_at"),
-//                            rs.getString("signature"),rs.getString("X"),picture);
-//                    tmp.setSubMember(addMember);
-//                    System.out.println("---Dump---");
-//                    tmp.displayInfo();
-//                    System.out.println("---Dump---");
-//                    System.out.println("Trong này có các nhân viên: ");
-//                    for (String subject : tmp.getSubMember()) {
-//                        System.out.println(subject);
-//                    }
-//                    file_list.add(tmp);
-//
-//
-//                    addMember.clear();
-//                    check = 1;
-//                    System.out.println("-----");
-//
-//
-//                }
-
-
             }
-        }catch (Exception ex){
+
+            try {
+                add.setSubMember(addMember);
+                add.setTmp(tmpmember);
+                add.displayInfo();
+                file_list.add(add);
+                System.out.println("----Check thôi---");
+                file_list.get(0).displayInfo();
+                System.out.println("--- ---");
+            } catch (Exception ex) {
+                System.out.println(ex);
+                Log.e("error", ex.getMessage());
+            }
+
+        } catch (Exception ex) {
             System.out.println(ex);
-            Log.e("error",ex.getMessage());
+            Log.e("error", ex.getMessage());
+        } finally {
+
         }
+//        file_list.add(add);
+//        file_list.get(0).displayInfo();
+
         System.out.println("Check kết quả cuối");
 
-        file_list.get(0).displayInfo();
+        if (file_list.size() == 0) {
+            TextView tvIfNull = findViewById(R.id.tvIfNull);
+            tvIfNull.setVisibility(View.VISIBLE);
+            if (1 == 2) tvIfNull.setText(tvIfNull.getText() + " hoặc bạn chưa được cấp phép xem");
+        }
+
         return file_list;
     }
 
 
-    private void getInfor(){
+    private void getInfor() {
         SharedPreferences prefs = getSharedPreferences("preference_user", MODE_PRIVATE);
-        String name = prefs.getString("id_user","");
+        String name = prefs.getString("id_user", "");
         System.out.println(name);
 
     }
 
+    private void setFilter() {
+        ImageView filter = findViewById(R.id.filter);
+
+        filter.setOnClickListener(v -> {
+            Dialog dialog = new Dialog(this);
+            dialog.setContentView(R.layout.filter_van_ban);
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            dialog.getWindow().setGravity(Gravity.TOP);
+            dialog.show();
+
+            SearchView svSearch = dialog.findViewById(R.id.svSearch);
+            svSearch.setQuery(textFilter, false);
+            svSearch.clearFocus();
+            svSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    System.out.println("Đang tìm kiếm văn bản");
+
+                    filterList(newText);
+                    textFilter = newText;
+                    return true;
+                }
+            });
+
+
+        });
+    }
+
+    private void filterList(String newText) {
+        List<checkSignatureModel> filter_list = new ArrayList<>();
+        for (checkSignatureModel item : file_list) {
+            if (item.getFullname().toLowerCase().contains(newText.toLowerCase())) {
+                filter_list.add(item);
+            }
+
+        }
+
+        if (filter_list.isEmpty()) {
+            Toast.makeText(this, "Không tìm thấy", Toast.LENGTH_SHORT).show();
+        } else {
+            adapter.setList(filter_list);
+        }
+
+    }
 }

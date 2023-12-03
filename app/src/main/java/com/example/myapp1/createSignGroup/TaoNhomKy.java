@@ -10,6 +10,7 @@ import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,7 +53,8 @@ public class TaoNhomKy extends AppCompatActivity {
     TaoNhomAdapter adapter;
     private Toast mToast;
     private long backPressedTime;
-    String textFilter ="";
+
+    String textFilter = "";
 
 
     @Override
@@ -80,6 +83,7 @@ public class TaoNhomKy extends AppCompatActivity {
         String id_main = prefs.getString("id_user", "");
 
 
+
         button_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,6 +91,9 @@ public class TaoNhomKy extends AppCompatActivity {
                     mToast.cancel();
                 }
                 backPressedTime = System.currentTimeMillis();
+
+
+
 
                 if (adapter.getSelected().size() > 0) {
                     final String[] passwd = {""};
@@ -103,7 +110,7 @@ public class TaoNhomKy extends AppCompatActivity {
                     );
                     builder.setView(view);
 
-                    ((TextView) view.findViewById(R.id.textMain)).setText("Xác thực tài khoản");
+                    ((TextView) view.findViewById(R.id.textMain)).setText("Xác nhận giao");
 
 
                     AlertDialog alertDialog = builder.create();
@@ -127,133 +134,176 @@ public class TaoNhomKy extends AppCompatActivity {
                             System.out.println("Khóa công khai lấy được là: " + pubkeytemp);
                             if (!prefs.getString("pubkey", "XXX").equals(pubkeytemp)) {
                                 System.out.println("Lỗi rồi, sai khóa r nhé");
-                                DialogHelper.showErrorOneButton(TaoNhomKy.this,"Xác thực tài khoản", "Xác thực tài khoản thất bại, vui lòng thử lại sau!");
+                                DialogHelper.showErrorOneButton(TaoNhomKy.this, "Xác thực tài khoản", "Xác thực tài khoản thất bại, vui lòng thử lại sau!");
 
                             } else {
+
+                                AlertDialog.Builder builder2 = new AlertDialog.Builder(TaoNhomKy.this, R.style.AlertDialogTheme);
+                                View viewProcess = LayoutInflater.from(TaoNhomKy.this).inflate(
+                                        R.layout.popup_loading_process,
+                                        null
+                                );
+                                builder2.setView(viewProcess);
+
+                                ((TextView) viewProcess.findViewById(R.id.textMain)).setText("Quá trình tạo nhóm ký");
+
+                                TextView textprocess = viewProcess.findViewById(R.id.textMessage);
+
+                                AlertDialog alertProcess = builder2.create();
+
+                                alertProcess.show();
+
+
                                 privkeyMain[0] = decryptPrikey;
                                 System.out.println("So sánh khóa giống nhau 100% y đúc");
+                                textprocess.setText("Đang thực hiện hành động tạo nhóm");
 
-                                if (1 == 1) {
-                                    Toast.makeText(TaoNhomKy.this, "Đang tạo nhóm ký bước 1", Toast.LENGTH_SHORT).show();
-
-
-                                    String KiMain = ecSHelper.getKi(TaoNhomKy.this, prefs.getString("pubkey", ""), hashMsg);
-
-                                    String tmpHashIdVanban = ecSHelper.getHashMsg_type2(TaoNhomKy.this, Instant.now().toEpochMilli() + id_main + id_vanBan);
-
-                                    System.out.println("Giá trị tempt là: " + tmpHashIdVanban);
-
-                                    //Bước 1: Tạo ra nhóm ký
-                                    Toast.makeText(TaoNhomKy.this, "Đang tạo nhóm ký bước 2", Toast.LENGTH_SHORT).show();
-                                    InsertDB.createNhomKy(id_main, tmpHashIdVanban, id_vanBan);
-                                    String id_nhom_ky = SelectDB.getNhomKy_ByHash(tmpHashIdVanban);
+                                Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        // Thực hiện các đoạn mã sau khi độ trễ
 
 
-                                    //Bước 2: Thêm UserMain vào trước / Coi như người này được xếp thứ tự đầu tiên
-                                    //Làm xong nhớ bỏ comment để thử nghiệm, thử nghiệm 1 lần duy nhất :(
-                                    Toast.makeText(TaoNhomKy.this, "Đang tạo nhóm ký bước 3", Toast.LENGTH_SHORT).show();
-                                    InsertDB.insertMemberToNhomky(prefs.getString("id_user", ""), id_nhom_ky, KiMain);
+                                        if (1 == 1) {
+                                            Toast.makeText(TaoNhomKy.this, "Đang tạo nhóm ký bước 1", Toast.LENGTH_SHORT).show();
+
+                                            String KiMain = ecSHelper.getKi(TaoNhomKy.this, prefs.getString("pubkey", ""), hashMsg);
+                                            String tmpHashIdVanban = ecSHelper.getHashMsg_type2(TaoNhomKy.this, Instant.now().toEpochMilli() + id_main + id_vanBan);
+                                            System.out.println("Giá trị tempt là: " + tmpHashIdVanban);
+
+                                            //Bước 1: Tạo ra nhóm ký
+                                            Toast.makeText(TaoNhomKy.this, "Đang tạo nhóm ký bước 2", Toast.LENGTH_SHORT).show();
+
+                                            textprocess.setText("Đang tạo nhóm ký");
+                                            InsertDB.createNhomKy(id_main, tmpHashIdVanban, id_vanBan);
+
+                                            textprocess.setText("Đang lấy thông tin cơ bản của nhóm ký");
+                                            String id_nhom_ky = SelectDB.getNhomKy_ByHash(tmpHashIdVanban);
 
 
-                                    StringBuilder stringBuilder = new StringBuilder();
-                                    stringBuilder.append("Danh sách nhân viên gồm:").append("\n");
-                                    String id_user;
-                                    String ki_person;
-
-                                    String ki_group = KiMain;
-                                    String tmpXGroup = pubkeyMain;
-                                    System.out.println(KiMain);
-                                    for (int i = 0; i < adapter.getSelected().size(); i++) {
+                                            //Bước 2: Thêm UserMain vào trước / Coi như người này được xếp thứ tự đầu tiên
+                                            //Làm xong nhớ bỏ comment để thử nghiệm, thử nghiệm 1 lần duy nhất :(
+                                            Toast.makeText(TaoNhomKy.this, "Đang tạo nhóm ký bước 3", Toast.LENGTH_SHORT).show();
+                                            textprocess.setText("Đang thêm trưởng nhóm vào nhóm ký");
+                                            InsertDB.insertMemberToNhomky(prefs.getString("id_user", ""), id_nhom_ky, KiMain);
 
 
-                                        id_user = adapter.getSelected().get(i).getId();
-                                        String publicKey_user = adapter.getSelected().get(i).getPublickey();
+                                            StringBuilder stringBuilder = new StringBuilder();
+                                            stringBuilder.append("Danh sách nhân viên gồm:").append("\n");
+                                            String id_user;
+                                            String ki_person;
+
+                                            String ki_group = KiMain;
+                                            String tmpXGroup = pubkeyMain;
+                                            System.out.println(KiMain);
+                                            for (int i = 0; i < adapter.getSelected().size(); i++) {
+
+                                                id_user = adapter.getSelected().get(i).getId();
+                                                String publicKey_user = adapter.getSelected().get(i).getPublickey();
 
 
-                                        //Lấy giá trị của từng người, thì mình select toàn bộ luôn insert update các kiểu
+                                                //Lấy giá trị của từng người, thì mình select toàn bộ luôn insert update các kiểu
 
 
-                                        try {
+                                                try {
 
-                                            Toast.makeText(TaoNhomKy.this, "Đang tạo chữ ký cho nhân viên " + adapter.getSelected().get(i).getUsername(), Toast.LENGTH_SHORT).show();
-                                            System.out.println("\n\n------------------Tính cá nhân-------------------------------");
-                                            System.out.println("Khóa công khai cá nhân: " + publicKey_user);
-                                            tmpXGroup += " " + publicKey_user;
+                                                    Toast.makeText(TaoNhomKy.this, "Đang tạo chữ ký cho nhân viên " + adapter.getSelected().get(i).getUsername(), Toast.LENGTH_SHORT).show();
 
-                                            //Thêm User vào db nhóm ký để tính toán giá trị ký riêng, còn về db lưu trữ ki_person thì sẽ lưu riêng...?
-                                            //Vì ki_main không có tác dụng gì lắm vì có xong giá trị ki của user_main sẽ ký thẳng luôn coi như là ký nháp
+                                                    textprocess.setText("Đang thêm "+adapter.getSelected().get(i).getUsername()+" vào nhóm ký");
+                                                    System.out.println("\n\n------------------Tính cá nhân-------------------------------");
+                                                    System.out.println("Khóa công khai cá nhân: " + publicKey_user);
+                                                    tmpXGroup += " " + publicKey_user;
 
-                                            //Ở đây sẽ có thể createKi xong gửi cho từng người một
-                                            ki_person = "Hàm tạo ra giá trị ki mỗi người";
-                                            ki_person = ecSHelper.getKi(TaoNhomKy.this, publicKey_user, hashMsg);
-                                            System.out.println("Giá trị ki mỗi người là: " + ki_person);
+                                                    //Thêm User vào db nhóm ký để tính toán giá trị ký riêng, còn về db lưu trữ ki_person thì sẽ lưu riêng...?
+                                                    //Vì ki_main không có tác dụng gì lắm vì có xong giá trị ki của user_main sẽ ký thẳng luôn coi như là ký nháp
 
-                                            //createKi xong lưu trữ lại giá trị Ki đó để tính Rsum ở phía dưới
-                                            ki_group += " " + ki_person; //Lưu lại tổng bộ các giá trị ki mà được lưu trữ để tính toán Rsum
-                                            System.out.println("Giá trị ki_nhóm khi lưu vào là: " + ki_group);
+                                                    //Ở đây sẽ có thể createKi xong gửi cho từng người một
+                                                    ki_person = "Hàm tạo ra giá trị ki mỗi người";
+                                                    ki_person = ecSHelper.getKi(TaoNhomKy.this, publicKey_user, hashMsg);
+                                                    System.out.println("Giá trị ki mỗi người là: " + ki_person);
 
-                                            //Bước 3: Thêm các User vào nhóm ký, đây là bước để tạo ra queue yêu cầu ký xác nhận
-                                            //Tạo nhóm ký và gửi cho từng user về tham số ki của mỗi người để ký. Còn chủ nhóm sẽ ký trực tiếp khi mới tạo ra nhóm luôn
-                                            InsertDB.insertMemberToNhomky(id_user, id_nhom_ky, ki_person);
+                                                    //createKi xong lưu trữ lại giá trị Ki đó để tính Rsum ở phía dưới
+                                                    ki_group += " " + ki_person; //Lưu lại tổng bộ các giá trị ki mà được lưu trữ để tính toán Rsum
+                                                    System.out.println("Giá trị ki_nhóm khi lưu vào là: " + ki_group);
+
+                                                    //Bước 3: Thêm các User vào nhóm ký, đây là bước để tạo ra queue yêu cầu ký xác nhận
+                                                    //Tạo nhóm ký và gửi cho từng user về tham số ki của mỗi người để ký. Còn chủ nhóm sẽ ký trực tiếp khi mới tạo ra nhóm luôn
+                                                    InsertDB.insertMemberToNhomky(id_user, id_nhom_ky, ki_person);
 
 
-                                        } catch (Exception e) {
-                                            Log.e("error", e.getMessage());
-                                            DialogHelper.showErrorOneButton(TaoNhomKy.this,"Lỗi chưa được sửa", "Bạn vô tình tạo ra lỗi. Xin vui lòng thử lại sau. Hãy check LogCat");
-                                        }
-                                        stringBuilder.append(adapter.getSelected().get(i).getUsername());
-                                        stringBuilder.append("\n");
+                                                } catch (Exception e) {
+                                                    Log.e("error", e.getMessage());
+//                                                    DialogHelper.showErrorOneButton(TaoNhomKy.this, "Lỗi chưa được sửa", "Bạn vô tình tạo ra lỗi. Xin vui lòng thử lại sau. Hãy check LogCat");
+                                                    alertProcess.dismiss();
+                                                    break;
+                                                }
+                                                stringBuilder.append(adapter.getSelected().get(i).getUsername());
+                                                stringBuilder.append("\n");
 
-                                    }
-                                    try {
-                                        System.out.println("\n\nGía trị ngoài");
-                                        System.out.println("Giá trị tmp group:" + tmpXGroup);
+                                            }
+                                            try {
+                                                System.out.println("\n\nGía trị ngoài");
+                                                System.out.println("Giá trị tmp group:" + tmpXGroup);
 
-                                        String Lgroup = ecSHelper.getL(TaoNhomKy.this, tmpXGroup);
-                                        String Xgroup = ecSHelper.getX(TaoNhomKy.this, tmpXGroup);
+                                                String Lgroup = ecSHelper.getL(TaoNhomKy.this, tmpXGroup);
+                                                String Xgroup = ecSHelper.getX(TaoNhomKy.this, tmpXGroup);
 
-                                        String Xgroup_sign = ecSHelper.getXcheck(TaoNhomKy.this, tmpXGroup);
+                                                String Xgroup_sign = ecSHelper.getXcheck(TaoNhomKy.this, tmpXGroup);
 
-                                        //Tính toán giá trị Rsum ở đây thông qua ki ở phía trên
-                                        String Rsum = ecSHelper.getRsum(TaoNhomKy.this, ki_group);
-                                        System.out.println("Giá trị Rsum tính ra được là: " + Rsum);
-                                        //Tính toán giá trị c ở đây thông qua Rsum và Xgroup đã tính
-                                        String c = ecSHelper.getC(TaoNhomKy.this, Rsum, Xgroup, hashMsg);
-                                        System.out.println("Giá trị của C là: " + c);
+                                                //Tính toán giá trị Rsum ở đây thông qua ki ở phía trên
+                                                String Rsum = ecSHelper.getRsum(TaoNhomKy.this, ki_group);
+                                                System.out.println("Giá trị Rsum tính ra được là: " + Rsum);
+                                                //Tính toán giá trị c ở đây thông qua Rsum và Xgroup đã tính
+                                                String c = ecSHelper.getC(TaoNhomKy.this, Rsum, Xgroup, hashMsg);
+                                                System.out.println("Giá trị của C là: " + c);
 
-                                        //==> Ném giá trị Rsum, Xgroup và c vào thông tin nhóm ký
-                                        //==> Chuyển qua giao diện ký xác nhận văn bản sẽ tính toán giá trị si thông qua c chung và ki gửi cho từng người
-                                        //Sau khi người cuối cùng ký thì sẽ tính sSum vào
-                                        //1: Phiên đăng nhập mới nhất của người ký
-                                        //2: Kệ thẳng, cứ ai ký 5/5 thì tạo ra chữ ký luôn vì si là phải công khai mà. Còn xác định si kiểu gì thì khum bik hihi.
-                                        //Sẽ kiểm chứng lại si thông qua khóa bí mật của mỗi người sau, nhma giờ chưa phải lúc
+                                                //==> Ném giá trị Rsum, Xgroup và c vào thông tin nhóm ký
+                                                //==> Chuyển qua giao diện ký xác nhận văn bản sẽ tính toán giá trị si thông qua c chung và ki gửi cho từng người
+                                                //Sau khi người cuối cùng ký thì sẽ tính sSum vào
+                                                //1: Phiên đăng nhập mới nhất của người ký
+                                                //2: Kệ thẳng, cứ ai ký 5/5 thì tạo ra chữ ký luôn vì si là phải công khai mà. Còn xác định si kiểu gì thì khum bik hihi.
+                                                //Sẽ kiểm chứng lại si thông qua khóa bí mật của mỗi người sau, nhma giờ chưa phải lúc
 
 
 //                                        InsertDB.insertNhomKy(prefs.getString("user",""),Xgroup,Rsum,c,hashMsg);
 
 
-                                        System.out.println("Giá trị của các tham số lần lượt là:");
-                                        System.out.println("privateKey = " + privkeyMain[0]);
-                                        System.out.println("Cgroup = " + c);
-                                        System.out.println("Ki person = " + KiMain);
-                                        System.out.println("Lgroup = " + Lgroup);
+                                                System.out.println("Giá trị của các tham số lần lượt là:");
+                                                System.out.println("privateKey = " + privkeyMain[0]);
+                                                System.out.println("Cgroup = " + c);
+                                                System.out.println("Ki person = " + KiMain);
+                                                System.out.println("Lgroup = " + Lgroup);
 
-                                        System.out.println("Tới bước tạo ra si");
-                                        String Si = ecSHelper.getSi(TaoNhomKy.this, privkeyMain[0], c, KiMain, Lgroup, Xgroup_sign, Rsum);
-                                        System.out.println("Si = " + Si);
+                                                System.out.println("Tới bước tạo ra si");
+                                                String Si = ecSHelper.getSi(TaoNhomKy.this, privkeyMain[0], c, KiMain, Lgroup, Xgroup_sign, Rsum);
+                                                System.out.println("Si = " + Si);
 
-                                        Toast.makeText(TaoNhomKy.this, "Đang thiết lập cuối cùng cho nhóm ký", Toast.LENGTH_SHORT).show();
-                                        UpdateDB.kyVanBan(prefs.getString("id_user", ""), id_nhom_ky, Si, "9999999999999999999999999999999");
+                                                textprocess.setText("Đang thiết lập cuối cùng cho nhóm ký");
+                                                Toast.makeText(TaoNhomKy.this, "Đang thiết lập cuối cùng cho nhóm ký", Toast.LENGTH_SHORT).show();
+                                                UpdateDB.kyVanBan(prefs.getString("id_user", ""), id_nhom_ky, Si, "9999999999999999999999999999999");
 //                                        UpdateDB.updateNhomKy(Lgroup, Xgroup, Rsum, c, ecSHelper.getHashMsg_type2(TaoNhomKy.this, prefs.getString("noi_dung_van_ban", "")), tmpHashIdVanban);
-                                        UpdateDB.updateNhomKy(Lgroup, Xgroup, Rsum, c, tmpHashIdVanban);
+                                                textprocess.setText("Hoàn thành tạo nhóm");
+                                                UpdateDB.updateNhomKy(Lgroup, Xgroup, Rsum, c, tmpHashIdVanban);
 
-                                        System.out.println(Xgroup);
-                                        DialogHelper.showSuccessDialogWithReturn(TaoNhomKy.this,"Gửi yêu cầu thành công",stringBuilder,"Hoàn thành");
+                                                System.out.println(Xgroup);
+                                                alertProcess.dismiss();
+                                                DialogHelper.showSuccessDialogWithReturn(TaoNhomKy.this, "Gửi yêu cầu thành công", stringBuilder, "Hoàn thành");
 //                                        showSuccessDialog(stringBuilder);
-                                    } catch (Exception ex) {
-                                        Log.e("error", ex.getMessage());
-                                        DialogHelper.showErrorOneButton(TaoNhomKy.this,"Lỗi khi tạo chữ ký nhóm", "Bạn vô tình tạo ra lỗi. Xin vui lòng thử lại sau. Hãy check LogCat");
+                                            } catch (Exception ex) {
+                                                Log.e("error", ex.getMessage());
+                                                DialogHelper.showErrorOneButton(TaoNhomKy.this, "Lỗi khi tạo chữ ký nhóm", "Bạn vô tình tạo ra lỗi. Xin vui lòng thử lại sau. Hãy check LogCat");
+                                            }
+                                        }
+
+
+                                        UpdateDB.dropbackLater();
+
                                     }
+                                }, 1000); // Thời gian độ trễ trong milliseconds (ở đây là 2000ms = 2s)
+
+                                if (alertProcess.getWindow() != null) {
+                                    alertProcess.getWindow().setBackgroundDrawable(new ColorDrawable(0));
                                 }
 
                             }
@@ -283,7 +333,12 @@ public class TaoNhomKy extends AppCompatActivity {
         button_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                System.out.println("Bạn đã bấm hủy toàn bộ");
 
+                for (int i = 0; i < adapter.getItemCount(); i++) {
+                    adapter.list.get(i).setChecked(false);
+                }
+                adapter.setList(list);
             }
         });
 
@@ -304,7 +359,7 @@ public class TaoNhomKy extends AppCompatActivity {
             dialog.show();
 
             SearchView svSearch = dialog.findViewById(R.id.svSearch);
-            svSearch.setQuery(textFilter,false);
+            svSearch.setQuery(textFilter, false);
             svSearch.clearFocus();
             ((TextView) dialog.findViewById(R.id.tvMain)).setText("Tìm kiếm nhân viên");
             svSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -340,15 +395,15 @@ public class TaoNhomKy extends AppCompatActivity {
 
     private void filterList(String newText) {
         List<TaoNhomModel> filter_list = new ArrayList<>();
-        for (TaoNhomModel item : list){
-            if (item.getUsername().toLowerCase().contains(newText.toLowerCase())){
+        for (TaoNhomModel item : list) {
+            if (item.getUsername().toLowerCase().contains(newText.toLowerCase())) {
                 filter_list.add(item);
             }
 
         }
 
-        if (filter_list.isEmpty()){
-            Toast.makeText(this,"Không tìm thấy", Toast.LENGTH_SHORT).show();
+        if (filter_list.isEmpty()) {
+            Toast.makeText(this, "Không tìm thấy", Toast.LENGTH_SHORT).show();
         } else {
             adapter.setList(filter_list);
         }
@@ -373,101 +428,6 @@ public class TaoNhomKy extends AppCompatActivity {
         }
 
     }
-
-    private void showWarning_forGet_privateKey() {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(TaoNhomKy.this, R.style.AlertDialogTheme);
-        View view = LayoutInflater.from(TaoNhomKy.this).inflate(
-                R.layout.popup_warning_gettext_dialog,
-                (ConstraintLayout) findViewById(R.id.layoutDialogContainer)
-        );
-        builder.setView(view);
-
-        ((TextView) view.findViewById(R.id.textMain)).setText("Xác thực tài khoản");
-
-        AlertDialog alertDialog = builder.create();
-
-        view.findViewById(R.id.buttonAction).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                passwd = String.valueOf(((TextView) view.findViewById(R.id.textMessage)).getText());
-                alertDialog.dismiss();
-            }
-        });
-
-        if (alertDialog.getWindow() != null) {
-            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
-        }
-
-        alertDialog.show();
-
-    }
-
-    private void showSuccessDialog(StringBuilder text) {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(TaoNhomKy.this, R.style.AlertDialogTheme);
-        View view = LayoutInflater.from(TaoNhomKy.this).inflate(
-                R.layout.textdialog,
-                (ConstraintLayout) findViewById(R.id.layoutDialogContainer)
-        );
-        builder.setView(view);
-
-        ((TextView) view.findViewById(R.id.textMain)).setText("Gửi yêu cầu thành công");
-
-        ((TextView) view.findViewById(R.id.textMessage)).setText(text);
-
-        ((Button) view.findViewById(R.id.buttonAction)).setText("Hoàn thành");
-
-
-        AlertDialog alertDialog = builder.create();
-
-        view.findViewById(R.id.buttonAction).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
-                onBackPressed();
-            }
-        });
-
-        if (alertDialog.getWindow() != null) {
-            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
-        }
-
-        alertDialog.show();
-
-    }
-
-    private void showErrorOneButton(String main, String cmt) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(TaoNhomKy.this, R.style.AlertDialogTheme);
-        View view = LayoutInflater.from(TaoNhomKy.this).inflate(
-                R.layout.popup_error_dialog_one_option,
-                (ConstraintLayout) findViewById(R.id.layoutDialogContainer)
-        );
-        builder.setView(view);
-
-        ((TextView) view.findViewById(R.id.textMain)).setText(main);
-
-        ((TextView) view.findViewById(R.id.textMessage)).setText(cmt);
-
-        ((Button) view.findViewById(R.id.buttonAction)).setText("Xác nhận");
-
-        AlertDialog alertDialog = builder.create();
-
-        view.findViewById(R.id.buttonAction).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
-            }
-        });
-
-        if (alertDialog.getWindow() != null) {
-            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
-        }
-
-        alertDialog.show();
-
-    }
-
 
     public String readfile(String filepath) {
         filepath = filepath + ".key";

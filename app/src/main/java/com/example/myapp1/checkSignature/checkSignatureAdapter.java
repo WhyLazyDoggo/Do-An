@@ -37,7 +37,10 @@ public class checkSignatureAdapter extends RecyclerView.Adapter < checkSignature
         this.context = context;
         this.sign_list = sign_list;
     }
-
+    public void setList(List<checkSignatureModel> filterlist) {
+        this.sign_list = filterlist;
+        notifyDataSetChanged();
+    }
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -110,13 +113,21 @@ public class checkSignatureAdapter extends RecyclerView.Adapter < checkSignature
                             System.out.println("Bạn đã click thành công");
                             System.out.println("-------------------------------------------------------------");
 
+
+                            System.out.println(model.getDatafile());
+                            System.out.println(ecSHelper.getHashMsg_type2(context, model.getDatafile()));
+                            System.out.println(model.getGroup_key());
+                            System.out.println(model.getSignature());
+
+
+
                             String resultSig = ecSHelper.checkSignature(context, ecSHelper.getHashMsg_type2(context, model.getDatafile()), model.getGroup_key(), model.getSignature());
 
                             System.out.println(resultSig);
                             if (resultSig.equals("hong")) {
                                 showErrorDialogNoReturn(v, "Kiểm tra thất bại", "Có vẻ đã có lỗi gì đó, hãy thông báo lại cho quản trị viên nhé");
                             } else {
-                                showSuccessDialogNoReturn(v, "Kiểm tra thành công", "Chữ ký trùng khớp rùi nhé");
+                                showSuccessDialogNoReturn(v, "Kiểm tra thành công", "Xác thực thành công, chữ ký đã trùng khớp");
                             }
 
                         }

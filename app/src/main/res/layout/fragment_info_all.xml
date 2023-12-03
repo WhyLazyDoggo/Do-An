@@ -19,7 +19,7 @@
             android:layout_marginStart="36dp"
             android:layout_marginTop="100dp"
             android:layout_marginEnd="36dp"
-            android:layout_marginBottom="115dp"
+            android:layout_marginBottom="175dp"
             android:background="@drawable/dialog_background"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -110,6 +110,7 @@
                         app:layout_constraintStart_toEndOf="@+id/iv1"
 
                         app:layout_constraintTop_toBottomOf="@+id/tv1" />
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -166,7 +167,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     android:layout_marginBottom="12dp"
-                    android:background="@drawable/gray_background">
+                    android:background="@drawable/gray_background"
+                    android:visibility="gone">
 
                     <ImageView
                         android:id="@+id/imageView8"
@@ -303,6 +305,26 @@
 
                         app:layout_constraintTop_toBottomOf="@+id/textView6" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/LayoutPhienBan"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="12dp">
+
+                    <TextView
+                        android:id="@+id/infoPhienBan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bản Beta"
+                        android:textSize="14sp"
+
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
             </LinearLayout>
 
 

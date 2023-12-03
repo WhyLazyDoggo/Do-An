@@ -32,11 +32,11 @@ def getpublickey(priKey):
     print("Privatekey cuối cùng = ",hex_privkey) #In ra khóa bí mật thôi không có ý nghĩa gì lắm
     return bytes_from_point(publickey).hex()
 
-def getprivatekey():
+def getprivatekey(username):
     t = xor_bytes(bytes_from_int(30112001), tagged_hash("BIP0340/aux", get_aux_rand()))
     ki = int_from_bytes(tagged_hash("BIP0340/nonce", t)) % n
 
-    privkey_int = int_from_hex(hashlib.sha256(str(ki).encode()).hexdigest())
+    privkey_int = int_from_hex(hashlib.sha256((str(ki)+username).encode()).hexdigest())
     privkey_even = privkey_int if has_even_y(pubkey_point_gen_from_int(privkey_int)) else n - privkey_int
     hex_privkey = hex(privkey_even).replace('0x', '').rjust(64, '0')
     return hex_privkey

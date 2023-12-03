@@ -16,18 +16,18 @@ public class ConnectDatabase {
     static String id, pass, ip, port, database;
     @Nullable
     public static Statement makeStatement(){
-        ip ="db-sig.cosncuwagf24.us-east-1.rds.amazonaws.com";
+        ip ="mysqldb.c3mah43udqaz.us-east-1.rds.amazonaws.com";
         id ="admin";
-        pass = "Shota4ever";
+        pass = "shota4ever";
         port = "3306";
-        database = "DB_ECC";
+        database = "Data_Sign";
 
 //        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 //        StrictMode.setThreadPolicy(policy);
 
         String ConnectionURL = null;
 
-        ConnectionURL = "jdbc:mysql://db-sig.cosncuwagf24.us-east-1.rds.amazonaws.com:3306/DB_ECC?user=admin&password=Shota4ever&useSSL=false&autoReconnect=true";
+        ConnectionURL = "jdbc:mysql://mysqldb.c3mah43udqaz.us-east-1.rds.amazonaws.com:3306/Data_Sign?user=admin&password=shota4ever&useSSL=false&autoReconnect=true";
         System.out.println(ConnectionURL);
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -81,8 +81,8 @@ public class ConnectDatabase {
         Connection connection = null;
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            ConnectionURL = "jdbc:mysql://db-sig.cosncuwagf24.us-east-1.rds.amazonaws.com:3306/DB_ECC?useUnicode=true&useSSL=false&characterEncoding=UTF-8";
-            connection = DriverManager.getConnection(ConnectionURL, "admin", "Shota4ever");
+            ConnectionURL = "jdbc:mysql://mysqldb.c3mah43udqaz.us-east-1.rds.amazonaws.com:3306/Data_Sign?useUnicode=true&useSSL=false&characterEncoding=UTF-8";
+            connection = DriverManager.getConnection(ConnectionURL, "admin", "shota4ever");
 
 
         } catch (Exception e) {
@@ -101,8 +101,8 @@ public class ConnectDatabase {
         Statement stmt = null;
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            ConnectionURL = "jdbc:mysql://db-sig.cosncuwagf24.us-east-1.rds.amazonaws.com:3306/DB_ECC?useUnicode=true&useSSL=false&characterEncoding=UTF-8";
-            Connection connection = DriverManager.getConnection(ConnectionURL, "admin", "Shota4ever");
+            ConnectionURL = "jdbc:mysql://mysqldb.c3mah43udqaz.us-east-1.rds.amazonaws.com:3306/Data_Sign?useUnicode=true&useSSL=false&characterEncoding=UTF-8";
+            Connection connection = DriverManager.getConnection(ConnectionURL, "admin", "shota4ever");
             stmt = connection.createStatement();
 
 

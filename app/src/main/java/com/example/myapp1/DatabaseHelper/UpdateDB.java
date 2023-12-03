@@ -34,6 +34,27 @@ public class UpdateDB {
         }
     }
 
+    public static void dropbackLater(){
+        int rs;
+        try {
+            Statement st = ConnectDatabase.ConnectionClass();
+
+
+            String query = "DELETE FROM `Data_Sign`.`tien_trinh_ky` " +
+                    " WHERE `Data_Sign`.`tien_trinh_ky`.`id_nhom_ky` IN (SELECT `id` FROM `Data_Sign`.`nhom_ky` WHERE `L` is null); ";
+
+            String query2 = "DELETE FROM `Data_Sign`.`nhom_ky` WHERE `L` is null;";
+            System.out.println(query);
+
+            rs = st.executeUpdate(query);
+            st.executeUpdate(query2);
+        }
+        catch (SQLException ex) {
+            Log.e("Error when connect SQL", ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
+
 
     public static void updateDeleteAllChuKy(String id_user){
         int rs;

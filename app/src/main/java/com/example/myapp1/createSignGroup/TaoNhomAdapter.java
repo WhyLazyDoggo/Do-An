@@ -50,7 +50,7 @@ public class TaoNhomAdapter extends RecyclerView.Adapter <TaoNhomAdapter.ViewHol
 
         System.out.println(model.getPublickey());
 
-            holder.radio_btn.setChecked(model.isChecked());
+        holder.radio_btn.setChecked(model.isChecked());
 
         holder.decreption_tv.setText(model.getDecreption());
 

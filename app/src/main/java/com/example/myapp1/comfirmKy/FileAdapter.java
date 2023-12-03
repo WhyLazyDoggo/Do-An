@@ -5,6 +5,7 @@ import static android.content.Context.MODE_PRIVATE;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,7 @@ import com.example.myapp1.DatabaseHelper.SelectDB;
 import com.example.myapp1.DatabaseHelper.UpdateDB;
 import com.example.myapp1.DatabaseHelper.ecSHelper;
 import com.example.myapp1.R;
+import com.example.myapp1.createSignGroup.TaoNhomKy;
 import com.example.myapp1.createSignGroup.TaoNhomModel;
 
 import java.io.BufferedReader;
@@ -71,6 +73,7 @@ public class FileAdapter extends RecyclerView.Adapter <FileAdapter.ViewHolder>{
             holder.imagine_view.setImageResource(model.getProfileImagine());
             holder.user_name.setText(model.getName());
             holder.date_tv.setText(model.getDate());
+            holder.select_btn.setText("Ký văn bản");
             holder.select_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -148,7 +151,7 @@ public class FileAdapter extends RecyclerView.Adapter <FileAdapter.ViewHolder>{
                             );
                             builder2.setView(view);
 
-                            ((TextView) view.findViewById(R.id.textMain)).setText("Xác thực tài khoản");
+                            ((TextView) view.findViewById(R.id.textMain)).setText("Ký văn bản");
 
 
 
@@ -179,121 +182,154 @@ public class FileAdapter extends RecyclerView.Adapter <FileAdapter.ViewHolder>{
 
                                     alertDialog.dismiss();
 
-                                    if (1==1) {
-
-                                        ResultSet rs = null;
 
 
-                                        rs = SelectDB.getXcheck(id_nhomky);
-                                        String Xcheck = "";
-                                        String pubkey = "";
+                                    AlertDialog.Builder builder3 = new AlertDialog.Builder(context, R.style.AlertDialogTheme);
+                                    View viewProcess = LayoutInflater.from(context).inflate(
+                                            R.layout.popup_loading_process,
+                                            null
+                                    );
+                                    builder3.setView(viewProcess);
 
-                                        try {
-                                            while (rs.next()) {
-                                                pubkey += rs.getString("khoa_cong_khai") + " ";
+                                    ((TextView) viewProcess.findViewById(R.id.textMain)).setText("Quá trình ký văn bản");
 
-                                            }
-                                        } catch (Exception ex) {
-                                            Log.e("error", ex.getMessage());
-                                        }
+                                    TextView textprocess = viewProcess.findViewById(R.id.textMessage);
 
-                                        System.out.println("Giá trị pubkey:" + pubkey);
-                                        String Xgroup_check = ecSHelper.getXcheck(context, pubkey);
+                                    AlertDialog alertProcess = builder3.create();
 
-                                        Toast.makeText(v.getRootView().getContext(), "Đang trong giai đoạn ký", Toast.LENGTH_SHORT).show();
-                                        rs = SelectDB.getDataForSign(id_nhomky, model.getId());
-                                        try {
-                                            while (rs.next()) {
-                                                String c = rs.getString("c");
-                                                String KiMain = rs.getString("ki");
-                                                String Lgroup = rs.getString("L");
-                                                String Xgroup = rs.getString("X");
-                                                String Rsum = rs.getString("Rsum");
+                                    alertProcess.show();
+                                    textprocess.setText("Đang thực hiện hành động ký xác nhận văn bản");
 
-                                                System.out.println("Giá trị id_nhomky:" + model.getId_nhomKy());
-                                                System.out.println("Giá trị id_process:" + model.getId());
-                                                System.out.println("Giá trị c:" + c);
-                                                System.out.println("Giá trị ki:" + KiMain);
-                                                System.out.println("Giá trị L:" + Lgroup);
-                                                System.out.println("Giá trị private:" + privkeyMain[0]);
-                                                String Si = ecSHelper.getSi(context, privkeyMain[0], c, KiMain, Lgroup, Xgroup_check, Rsum);
+                                    Handler handler = new Handler();
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run(){
+                                            if (1==1) {
+
+                                                ResultSet rs = null;
 
 
-                                                System.out.println("Giá trị Si tính ra là:" + Si);
-                                                UpdateDB.kyVanBan("9999999999", "9999999999", Si, model.getId());
-
-                                                editor.putString("count_sign", String.valueOf(Integer.parseInt(prefs.getString("count_sign", "0")) - 1));
-                                                editor.commit();
-
-                                            }
-                                        } catch (Exception ex) {
-                                            Log.e("error", ex.getMessage());
-                                        }
-
-
-                                        ResultSet rs3 = null;
-                                        ResultSet rs2 = null;
-                                        rs3 = SelectDB.getSiGroup();
-                                        String msg = "";
-                                        String Xgroup = "";
-                                        String Rsum = "";
-                                        String id_nhom = "";
-                                        String sSumArray = "";
-                                        Toast.makeText(v.getRootView().getContext(), "Tới bước 2 của ký văn bản", Toast.LENGTH_SHORT).show();
-                                        try {
-                                            while (rs3.next()) {
-
-                                                if (id_nhom.equals(rs3.getString("id_nhom_ky"))) {
-                                                    sSumArray += rs3.getString("chu_ky_ca_nhan") + " ";
-                                                    System.out.println(id_nhom + " Giá trị của tệp là khi trùng nhóm: " + sSumArray);
-                                                    System.out.println("Các giá trị của file là: ");
-                                                    System.out.println(msg);
-                                                    System.out.println(Xgroup);
-                                                    System.out.println(Rsum);
-                                                    System.out.println("--------------------------");
-                                                } else {
-
-                                                    try {
-                                                        String signature = ecSHelper.getSignature(context, sSumArray, Rsum, Xgroup, msg);
-                                                        System.out.println("Giá trị chữ ký là:" + signature);
-                                                        UpdateDB.updateChuKy(signature, id_nhom);
-                                                    } catch (Exception e) {
-                                                        System.out.println(e);
-                                                    }
-
-                                                    id_nhom = rs3.getString("id_nhom_ky");
-                                                    sSumArray = rs3.getString("chu_ky_ca_nhan") + " ";
-                                                    System.out.println(id_nhom + " Giá trị của tệp là khi khác nhóm: " + sSumArray);
-                                                    System.out.println("Lấy giá trị msg, XGroup và Rsum mới");
-                                                    rs2 = SelectDB.getMsgXgroupRsum(id_nhom);
-                                                    rs2.next();
-                                                    msg = ecSHelper.getHashMsg_type2(context, rs2.getString("noi_dung_tom_tat"));
-                                                    Xgroup = rs2.getString("X");
-                                                    Rsum = rs2.getString("Rsum");
-                                                }
+                                                rs = SelectDB.getXcheck(id_nhomky);
+                                                String Xcheck = "";
+                                                String pubkey = "";
 
                                                 try {
-                                                    String signature = ecSHelper.getSignature(context, sSumArray, Rsum, Xgroup, msg);
-                                                    System.out.println("Giá trị chữ ký là:" + signature);
-                                                    UpdateDB.updateChuKy(signature, id_nhom);
-                                                    Toast.makeText(v.getRootView().getContext(), "Ký thành công", Toast.LENGTH_SHORT).show();
-                                                } catch (Exception e) {
-                                                    System.out.println("Chữ ký không được tạo ra, vô cùng xin lỗi hihi");
-                                                    System.out.println(e);
+                                                    while (rs.next()) {
+                                                        pubkey += rs.getString("khoa_cong_khai") + " ";
+
+                                                    }
+                                                } catch (Exception ex) {
+                                                    Log.e("error", ex.getMessage());
                                                 }
 
+                                                System.out.println("Giá trị pubkey:" + pubkey);
+                                                String Xgroup_check = ecSHelper.getXcheck(context, pubkey);
+
+                                                Toast.makeText(v.getRootView().getContext(), "Đang trong giai đoạn ký", Toast.LENGTH_SHORT).show();
+                                                rs = SelectDB.getDataForSign(id_nhomky, model.getId());
+                                                try {
+                                                    while (rs.next()) {
+                                                        String c = rs.getString("c");
+                                                        String KiMain = rs.getString("ki");
+                                                        String Lgroup = rs.getString("L");
+                                                        String Xgroup = rs.getString("X");
+                                                        String Rsum = rs.getString("Rsum");
+
+                                                        System.out.println("Giá trị id_nhomky:" + model.getId_nhomKy());
+                                                        System.out.println("Giá trị id_process:" + model.getId());
+                                                        System.out.println("Giá trị c:" + c);
+                                                        System.out.println("Giá trị ki:" + KiMain);
+                                                        System.out.println("Giá trị L:" + Lgroup);
+                                                        System.out.println("Giá trị private:" + privkeyMain[0]);
+                                                        String Si = ecSHelper.getSi(context, privkeyMain[0], c, KiMain, Lgroup, Xgroup_check, Rsum);
+
+
+                                                        System.out.println("Giá trị Si tính ra là:" + Si);
+                                                        UpdateDB.kyVanBan("9999999999", "9999999999", Si, model.getId());
+
+                                                        editor.putString("count_sign", String.valueOf(Integer.parseInt(prefs.getString("count_sign", "0")) - 1));
+                                                        editor.commit();
+
+                                                    }
+                                                } catch (Exception ex) {
+                                                    alertProcess.dismiss();
+//                                                    DialogHelper.showErrorOneButton(context,"Lỗi ký xác nhận","Bạn đang gặp lỗi trong quá trình ký.\n" +
+//                                                            "Vui lòng thử lại sau");
+                                                    Log.e("error", ex.getMessage());
+                                                }
+
+
+                                                ResultSet rs3 = null;
+                                                ResultSet rs2 = null;
+                                                rs3 = SelectDB.getSiGroup();
+                                                String msg = "";
+                                                String Xgroup = "";
+                                                String Rsum = "";
+                                                String id_nhom = "";
+                                                String sSumArray = "";
+                                                Toast.makeText(v.getRootView().getContext(), "Tới bước 2 của ký văn bản", Toast.LENGTH_SHORT).show();
+                                                try {
+                                                    while (rs3.next()) {
+
+                                                        if (id_nhom.equals(rs3.getString("id_nhom_ky"))) {
+                                                            sSumArray += rs3.getString("chu_ky_ca_nhan") + " ";
+                                                            System.out.println(id_nhom + " Giá trị của tệp là khi trùng nhóm: " + sSumArray);
+                                                            System.out.println("Các giá trị của file là: ");
+                                                            System.out.println(msg);
+                                                            System.out.println(Xgroup);
+                                                            System.out.println(Rsum);
+                                                            System.out.println("--------------------------");
+                                                        } else {
+
+                                                            try {
+                                                                String signature = ecSHelper.getSignature(context, sSumArray, Rsum, Xgroup, msg);
+                                                                System.out.println("Giá trị chữ ký là:" + signature);
+                                                                UpdateDB.updateChuKy(signature, id_nhom);
+                                                            } catch (Exception e) {
+                                                                System.out.println(e);
+                                                            }
+
+                                                            id_nhom = rs3.getString("id_nhom_ky");
+                                                            sSumArray = rs3.getString("chu_ky_ca_nhan") + " ";
+                                                            System.out.println(id_nhom + " Giá trị của tệp là khi khác nhóm: " + sSumArray);
+                                                            System.out.println("Lấy giá trị msg, XGroup và Rsum mới");
+                                                            rs2 = SelectDB.getMsgXgroupRsum(id_nhom);
+                                                            rs2.next();
+                                                            msg = ecSHelper.getHashMsg_type2(context, rs2.getString("noi_dung_tom_tat"));
+                                                            Xgroup = rs2.getString("X");
+                                                            Rsum = rs2.getString("Rsum");
+                                                        }
+
+                                                        try {
+                                                            String signature = ecSHelper.getSignature(context, sSumArray, Rsum, Xgroup, msg);
+                                                            System.out.println("Giá trị chữ ký là:" + signature);
+                                                            UpdateDB.updateChuKy(signature, id_nhom);
+                                                            Toast.makeText(v.getRootView().getContext(), "Ký thành công", Toast.LENGTH_SHORT).show();
+                                                        } catch (Exception e) {
+                                                            System.out.println("Chữ ký không được tạo ra, vô cùng xin lỗi hihi");
+                                                            System.out.println(e);
+//                                                            DialogHelper.showErrorOneButton(context,"Lỗi ký xác nhận","Bạn đang gặp lỗi trong quá trình ký.\n" +
+//                                                                    "Vui lòng thử lại sau");
+                                                        }
+
+                                                    }
+                                                } catch (SQLException ex) {
+                                                    Log.e("error", ex.getMessage());
+                                                }
+
+                                                alertProcess.dismiss();
+                                                DialogHelper.showSuccessDialogNoReturn(context,"Ký số thành công", "Chúc mừng bạn đã ký thành công văn bản");
+                                                alertDialog.dismiss();
+
                                             }
-                                        } catch (SQLException ex) {
-                                            Log.e("error", ex.getMessage());
-                                        }
+                                        }}, 1000); // Thời gian độ trễ trong milliseconds (ở đây là 2000ms = 2s)
 
 
-                                        DialogHelper.showSuccessDialogNoReturn(context,"Ký số thành công", "Chúc mừng bạn đã ký thành công văn bản");
-                                        alertDialog.dismiss();
 
+
+                                    if (alertProcess.getWindow() != null) {
+                                        alertProcess.getWindow().setBackgroundDrawable(new ColorDrawable(0));
                                     }
-
-
                                 }
 
                                 });

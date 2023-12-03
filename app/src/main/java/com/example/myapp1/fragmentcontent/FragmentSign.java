@@ -73,7 +73,7 @@ public class FragmentSign extends Fragment {
         linearLayout6.setVisibility(View.GONE);
 
         ImageView ivCreatGroup = view.findViewById(R.id.ivCreatGroup);
-        ivCreatGroup.setImageResource(R.drawable.search_sign_icon);
+        ivCreatGroup.setImageResource(R.drawable.icons8_rescan_document_100);
 
         ((TextView) view.findViewById(R.id.tvCreateGroup)).setText("Kiểm tra chữ ký");
 

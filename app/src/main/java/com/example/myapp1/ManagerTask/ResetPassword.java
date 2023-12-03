@@ -70,7 +70,7 @@ public class ResetPassword extends AppCompatActivity {
     private void makeNewPrivatekey() {
 
         //Lấy mới khóa bí mật và khóa công khai mới ở đây | Ở đây prikey là plaintext -> encryptKey -> decryptKey
-        String prikey = ecSHelper.getPrikey(this);
+        String prikey = ecSHelper.getPrikey(this,prefs.getString("username_user","001"));
 
         //Mã hóa lại prikey bằng id_máy + mật khẩu vừa nhập ở trên kia + hàm băm mật khẩu (Tăng độ dài khóa, vét cạn lâu và khó hơn, tìm kiêm kết quả khổ hơn
         //String enCryptKey(ContentResolver resolver, String userPassword, String plainText)    Với userPassword là mật khẩu + id của user

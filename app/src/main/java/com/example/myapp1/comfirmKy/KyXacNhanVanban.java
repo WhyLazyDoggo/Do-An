@@ -175,47 +175,6 @@ public class KyXacNhanVanban extends AppCompatActivity {
     }
 
 
-    private void showDeny() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(KyXacNhanVanban.this, R.style.AlertDialogTheme);
-        View view = LayoutInflater.from(KyXacNhanVanban.this).inflate(
-                R.layout.popup_warning_dialog,
-                (ConstraintLayout) findViewById(R.id.layoutDialogContainer)
-        );
-        builder.setView(view);
-
-        ((TextView) view.findViewById(R.id.textMain)).setText("Xác nhận hủy ký");
-
-        ((TextView) view.findViewById(R.id.textMessage)).setText("Bạn chắc chắn muốn hủy không ký văn bản này?" +
-                "\nHành động hủy này sẽ làm cả nhóm ký bị hủy theo");
-
-        ((Button) view.findViewById(R.id.buttonAction)).setText("Xác hủy ký");
-
-        ((Button) view.findViewById(R.id.buttonNo)).setText("Quay lại");
-
-        AlertDialog alertDialog = builder.create();
-
-        view.findViewById(R.id.buttonNo).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
-            }
-        });
-
-        view.findViewById(R.id.buttonAction).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showSuccessDialog("Hủy ký thành công", "Bạn đã hủy thành công ký nhóm này");
-                alertDialog.dismiss();
-            }
-        });
-
-        if (alertDialog.getWindow() != null) {
-            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
-        }
-
-        alertDialog.show();
-
-    }
 
     private void showChoiceDialog() {
 
@@ -233,36 +192,5 @@ public class KyXacNhanVanban extends AppCompatActivity {
 
     }
 
-    private void showSuccessDialog(String main, String text) {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(KyXacNhanVanban.this, R.style.AlertDialogTheme);
-        View view = LayoutInflater.from(KyXacNhanVanban.this).inflate(
-                R.layout.textdialog,
-                (ConstraintLayout) findViewById(R.id.layoutDialogContainer)
-        );
-        builder.setView(view);
-
-        ((TextView) view.findViewById(R.id.textMain)).setText(main);
-
-        ((TextView) view.findViewById(R.id.textMessage)).setText(text);
-
-        ((Button) view.findViewById(R.id.buttonAction)).setText("Kiểm tra");
-
-        AlertDialog alertDialog = builder.create();
-
-        view.findViewById(R.id.buttonAction).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
-            }
-        });
-
-        if (alertDialog.getWindow() != null) {
-            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
-        }
-
-        alertDialog.show();
-
-    }
 
 }

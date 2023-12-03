@@ -183,7 +183,7 @@
                         android:id="@+id/ivNull1"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:src="@drawable/search_sign_icon" />
+                        android:src="@drawable/icons8_rescan_document_100" />
 
                     <TextView
                         android:id="@+id/tvCheckSigner"

@@ -75,7 +75,7 @@ public class FragmentHome extends Fragment {
         TextView tV6 = view.findViewById(R.id.tV6);
         tV6.setText("Kiểm tra chữ ký");
         ImageView ivIvQuanLy = view.findViewById(R.id.ivIvExtra1);
-        ivIvQuanLy.setImageResource(R.drawable.search_sign_icon);
+        ivIvQuanLy.setImageResource(R.drawable.icons8_rescan_document_100);
 
 
     }

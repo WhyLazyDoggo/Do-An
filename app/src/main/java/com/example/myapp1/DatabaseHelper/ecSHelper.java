@@ -182,13 +182,13 @@ public class ecSHelper {
         }
     }
 
-    public static String getPrikey(Context context){
+    public static String getPrikey(Context context, String username){
         if (!Python.isStarted()) {
             Python.start(new AndroidPlatform(context));
         }
         Python py = Python.getInstance();
         PyObject creatX = py.getModule("test").get("getprivatekey");
-        PyObject result = creatX.call();
+        PyObject result = creatX.call(username);
         return String.valueOf(result);
     }
 

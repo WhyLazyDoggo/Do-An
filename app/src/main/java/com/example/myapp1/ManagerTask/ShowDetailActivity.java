@@ -228,7 +228,7 @@ public class ShowDetailActivity extends AppCompatActivity {
             View viewmini = LayoutInflater.from(this).inflate(R.layout.popup_warning_gettext_dialog, null);
             builder2.setView(viewmini);
 
-            ((TextView) viewmini.findViewById(R.id.textMain)).setText("Xác thực tài khoản");
+            ((TextView) viewmini.findViewById(R.id.textMain)).setText("Xác nhận hành động");
             ((EditText) viewmini.findViewById(R.id.textMessage)).setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
             ((EditText) viewmini.findViewById(R.id.textMessage)).setHint("Hãy nhập \"YES\" để xác nhận xóa");
 

@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapp1.R;
+import com.example.myapp1.comfirmKy.FileModel;
 
 import java.util.List;
 
@@ -24,7 +25,10 @@ public class checkNotSignatureAdapter extends RecyclerView.Adapter <checkNotSign
         this.context = context;
         this.sign_list = sign_list;
     }
-
+    public void setList(List<checkNotSignatureModel> filterlist) {
+        this.sign_list = filterlist;
+        notifyDataSetChanged();
+    }
 
     @NonNull
     @Override
